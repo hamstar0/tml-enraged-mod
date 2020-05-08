@@ -3,7 +3,12 @@ v1
 -	Implement enrage mode (buff)
 	-	Implement fx
 	-	Implement behaviors
+		-	Screen shakes + boss vibrates + rage noise
+		-	A trail of evil brambles is generated wherever the boss moves
+		-	Bosses defense increases 2x + 10
+		-	AI runs twice per frame
 
+	-	Define buff
 -	Implement rage building (with configs)
 	-	Rage reduces proportional to damage taken by target
 	-	Hits increase rage, with cooldowns between hits

@@ -19,8 +19,6 @@ namespace Enraged {
 
 		public float RageBuildupPercent { get; private set; } = 0f;
 
-		public int RageTimer { get; private set; } = 0;
-
 		////
 
 		public bool IsTargetUnharmedByMe => this.TargetUnharmedByMe >= EnragedConfig.Instance.TargetUnharmedTickThreshold;
@@ -50,7 +48,7 @@ namespace Enraged {
 		////////////////
 
 		public void Enrage( NPC npc ) {
-			this.RageTimer = EnragedConfig.Instance.RageDurationTicks;
+			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), EnragedConfig.Instance.RageDurationTicks );
 		}
 	}
 }
