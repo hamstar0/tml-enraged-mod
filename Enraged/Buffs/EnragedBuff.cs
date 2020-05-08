@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using HamstarHelpers.Services.Timers;
+using HamstarHelpers.Helpers.Debug;
 
 
 namespace Enraged.Buffs {
@@ -17,6 +18,10 @@ namespace Enraged.Buffs {
 
 
 		public override void Update( NPC npc, ref int buffIndex ) {
+			if( EnragedConfig.Instance.DebugModeInfo ) {
+				DebugHelpers.Print( "BossEnrageDuration_"+npc.whoAmI, ""+npc.buffTime[buffIndex] );
+			}
+
 			Timers.RunNow( () => {
 				for( int i = 0; i < EnragedConfig.Instance.TimesToRunAIPerTickWhileEnraged; i++ ) {
 					npc.AI();

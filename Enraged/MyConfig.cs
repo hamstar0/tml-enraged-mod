@@ -34,23 +34,23 @@ namespace Enraged {
 		public int TargetUnharmedTickThreshold { get; set; } = 60 * 15;
 
 		[Range( -1f, 1f )]
-		[DefaultValue( 1f / 60f )]
-		public float RagePercentGainPerTickFromUnharmedTarget { get; set; } = 1f / 60f;
+		[DefaultValue( (1f / 60f) / 60f )]
+		public float RagePercentGainPerTickFromUnharmedTarget { get; set; } = (1f / 60f) / 60f;
 
 		[Range( -1f, 1f )]
-		[DefaultValue( 1f / 60f )]
-		public float RagePercentGainPerTickFromTargetFleeing { get; set; } = 1f / 60f;
+		[DefaultValue( (1f / 60f) / 60f )]
+		public float RagePercentGainPerTickFromTargetFleeing { get; set; } = (1f / 60f) / 60f;
 
 		[Range( -1f, 1f )]
 		[DefaultValue( 0f )]
 		public float RagePercentGainPerTickFromTargetTooClose { get; set; } = 0f;
 
 		[Range( -1f, 1f )]
-		[DefaultValue( 0f )]
-		public float RagePercentGainPerHitTaken { get; set; } = 0f;
+		[DefaultValue( 1f / 60f )]
+		public float RagePercentGainPerHitTaken { get; set; } = 1f / 60f;
 
 		[Range( -1f, 1f )]
-		[DefaultValue( 0f )]
+		[DefaultValue( -1f / 60f )]
 		public float RagePercentGainPerTargetHitPer10 { get; set; } = -1f / 60f;
 
 		////
@@ -70,8 +70,8 @@ namespace Enraged {
 		////
 
 		[Range( 1, 60 * 60 * 60 )]
-		[DefaultValue( 60 * 20 )]
-		public int RageDurationTicks { get; set; } = 60 * 20;
+		[DefaultValue( 60 * 10 )]
+		public int RageDurationTicks { get; set; } = 60 * 10;
 
 
 		////////////////
@@ -82,11 +82,11 @@ namespace Enraged {
 		public int TimesToRunAIPerTickWhileEnraged { get; set; } = 2;
 
 		[Range( 1, 64 )]
-		[DefaultValue( 4 )]
-		public int EnragedBrambleTrailThickness { get; set; } = 4;
+		[DefaultValue( 5 )]
+		public int EnragedBrambleTrailThickness { get; set; } = 5;
 
-		[Range( 0f, 32f )]
-		[DefaultValue( 1f )]
-		public float EnragedBrambleTrailDensity { get; set; } = 1f;
+		[Range( 0f, 1f )]
+		[DefaultValue( 0.006f )]
+		public float EnragedBrambleTrailDensity { get; set; } = 0.006f;
 	}
 }

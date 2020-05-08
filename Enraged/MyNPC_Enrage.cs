@@ -1,12 +1,17 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using Enraged.Buffs;
 using HamstarHelpers.Tiles;
+using HamstarHelpers.Helpers.XNA;
+using Enraged.Buffs;
+
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
 		public void Enrage( NPC npc ) {
+			this.RageBuildupPercent = 0f;
+
 			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), EnragedConfig.Instance.RageDurationTicks );
 		}
 
@@ -40,6 +45,16 @@ namespace Enraged {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
 				damage = Math.Max( (damage / 2) - 10, 1 );
 				knockback = 0;
+			}
+		}
+
+
+		////////////////
+
+		public override void DrawEffects( NPC npc, ref Color drawColor ) {
+			if( npc.boss && npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
+				var newColor = new Color( 255, 128, 128 );
+				drawColor = XNAColorHelpers.Mul( drawColor, newColor );
 			}
 		}
 	}

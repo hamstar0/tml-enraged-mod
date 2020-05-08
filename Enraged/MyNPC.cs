@@ -13,11 +13,6 @@ namespace Enraged {
 
 		////////////////
 
-		public override bool CloneNewInstances => false;
-
-
-		////////////////
-
 		public float RageBuildupPercent { get; private set; } = 0f;
 
 		////
@@ -25,10 +20,17 @@ namespace Enraged {
 		public bool IsTargetUnharmedByMe => this.TargetUnharmedByMe >= EnragedConfig.Instance.TargetUnharmedTickThreshold;
 
 
+		////////////////
+
+		public override bool CloneNewInstances => false;
+
+		public override bool InstancePerEntity => true;
+
+
 
 		////////////////
 
-		private bool _IsUpdating = false;
+		 private bool _IsUpdating = false;
 
 		public override bool PreAI( NPC npc ) {
 			if( npc.boss && !this._IsUpdating ) {
