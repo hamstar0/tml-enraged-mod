@@ -1,0 +1,30 @@
+v1
+-	Define rage meter overlay ("hooks" YABHB mod's bars)
+-	Implement enrage mode (buff)
+	-	Implement fx
+	-	Implement behaviors
+
+-	Implement rage building (with configs)
+	-	Rage reduces proportional to damage taken by target
+	-	Hits increase rage, with cooldowns between hits
+	-	Rage increases when far from target
+	-	Rage increases when target takes no damage from boss
+-	Import brambles to Mod Helpers
+-	Setup project
+
+
+
+
+v1 plan
+-	Bosses have an 'enraged' state that can occur when being battled
+-	When enraged
+	-	Bosses defense increases 2x + 10
+	-	AI runs twice per frame
+	-	A trail of evil brambles is generated wherever the boss moves
+	-	Screen shakes + boss vibrates + rage noise
+-	Rage builds up during battles
+	-	Rage increases when target takes no damage from boss
+	-	Hits increase rage, with cooldowns between hits
+	-	Rage increases when close to target
+	-	Rage reduces proportional to damage taken by target
+-	Rage mode wears off after 20s
