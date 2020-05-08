@@ -1,1 +1,1 @@
-Enraged! is a pretty cool mod, it does...this. Modify this file with a description of your mod.
+Bosses now become enraged during battles. Various factors contribute to causing this effect. Rage state is temporaray, but can be devestating if unprepared. Configurable.
