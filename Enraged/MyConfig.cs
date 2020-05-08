@@ -28,6 +28,7 @@ namespace Enraged {
 
 		////
 
+		[Header( "Rage buildup settings" )]
 		[Range( 1, 60 * 60 * 60 )]
 		[DefaultValue( 60 * 15 )]
 		public int TargetUnharmedTickThreshold { get; set; } = 60 * 15;
@@ -71,5 +72,21 @@ namespace Enraged {
 		[Range( 1, 60 * 60 * 60 )]
 		[DefaultValue( 60 * 20 )]
 		public int RageDurationTicks { get; set; } = 60 * 20;
+
+
+		////////////////
+
+		[Header( "Enraged effects settings" )]
+		[Range( 1, 10 )]
+		[DefaultValue( 2 )]
+		public int TimesToRunAIPerTickWhileEnraged { get; set; } = 2;
+
+		[Range( 1, 64 )]
+		[DefaultValue( 4 )]
+		public int EnragedBrambleTrailThickness { get; set; } = 4;
+
+		[Range( 0f, 32f )]
+		[DefaultValue( 1f )]
+		public float EnragedBrambleTrailDensity { get; set; } = 1f;
 	}
 }

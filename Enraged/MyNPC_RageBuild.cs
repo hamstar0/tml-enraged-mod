@@ -1,9 +1,10 @@
-﻿using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Services.Timers;
+﻿using System;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.ModLoader;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Services.Timers;
+using Enraged.Buffs;
 
 
 namespace Enraged {
@@ -65,6 +66,9 @@ namespace Enraged {
 
 		public void AddRage( string context, NPC npc, float addedPercent ) {
 			if( addedPercent == 0f ) {
+				return;
+			}
+			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
 				return;
 			}
 

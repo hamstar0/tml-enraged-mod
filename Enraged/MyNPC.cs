@@ -1,6 +1,7 @@
 ﻿using System;
 using Terraria;
 using Terraria.ModLoader;
+using Enraged.Buffs;
 
 
 namespace Enraged {
@@ -33,10 +34,9 @@ namespace Enraged {
 			if( npc.boss && !this._IsUpdating ) {
 				if( npc.HasPlayerTarget ) {
 					Player player = Main.player[npc.target];
-
 					if( player?.active == true ) {
 						this._IsUpdating = true;
-						this.UpdateRageState( npc, player );
+						this.UpdateRageBehavior( npc, player );
 						this._IsUpdating = false;
 					}
 				}
@@ -44,11 +44,12 @@ namespace Enraged {
 			return base.PreAI( npc );
 		}
 
+		private void UpdateRageBehavior( NPC npc, Player targetPlr ) {
+			this.UpdateRageState( npc, targetPlr );
 
-		////////////////
-
-		public void Enrage( NPC npc ) {
-			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), EnragedConfig.Instance.RageDurationTicks );
+			if( npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
+				this.UpdateEnragedEffects( npc, targetPlr );
+			}
 		}
 	}
 }

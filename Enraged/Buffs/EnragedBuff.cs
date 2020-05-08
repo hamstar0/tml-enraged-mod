@@ -1,6 +1,7 @@
 ﻿using System;
 using Terraria;
 using Terraria.ModLoader;
+using HamstarHelpers.Services.Timers;
 
 
 namespace Enraged.Buffs {
@@ -12,6 +13,15 @@ namespace Enraged.Buffs {
 			//Main.pvpBuff[this.Type] = true;
 			Main.buffNoSave[this.Type] = true;
 			//this.longerExpertDebuff = true;
+		}
+
+
+		public override void Update( NPC npc, ref int buffIndex ) {
+			Timers.RunNow( () => {
+				for( int i = 0; i < EnragedConfig.Instance.TimesToRunAIPerTickWhileEnraged; i++ ) {
+					npc.AI();
+				}
+			} );
 		}
 	}
 }
