@@ -1,8 +1,11 @@
 v1
 -	Define rage meter overlay ("hooks" YABHB mod's bars)
 -	Implement enrage mode (buff)
-	-	Implement fx (screen shakes + boss vibrates + rage noise)
+	-	Implement fx
+		-	Screen shakes
+		-	Rage noise
 
+		-	Boss vibrates
 	-	Implement behaviors
 		-	Screen shakes + boss vibrates + rage noise
 		-	A trail of evil brambles is generated wherever the boss moves

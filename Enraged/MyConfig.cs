@@ -39,7 +39,7 @@ namespace Enraged {
 
 		[Range( -1f, 1f )]
 		[DefaultValue( (1f / 60f) / 60f )]
-		public float RagePercentGainPerTickFromTargetFleeing { get; set; } = (1f / 60f) / 60f;
+		public float RagePercentGainPerTickFromTargetTooFar { get; set; } = (1f / 60f) / 60f;
 
 		[Range( -1f, 1f )]
 		[DefaultValue( 0f )]
@@ -56,12 +56,12 @@ namespace Enraged {
 		////
 
 		[Range( 4, 1000 )]
-		[DefaultValue( 16 )]
-		public int MinimumTileDistanceBeforeRageGain { get; set; } = 16;
+		[DefaultValue( 32 )]
+		public int TileDistanceUntilTargetTooFar { get; set; } = 32;
 
 		[Range( 4, 1000 )]
 		[DefaultValue( 16 )]
-		public int MaximumTileDistanceBeforeRageGain { get; set; } = 16;
+		public int TileDistanceUntilTargetTooClose { get; set; } = 16;    // see `RagePercentGainPerTickFromTargetTooClose`
 
 		[Range( 0, 60 * 60 )]
 		[DefaultValue( 60 )]

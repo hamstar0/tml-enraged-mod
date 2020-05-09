@@ -19,13 +19,13 @@ namespace Enraged {
 			}
 
 			int distSqr = (int)Vector2.DistanceSquared( npc.Center, targetPlr.Center );
-			int minSafeDistSqr = config.MinimumTileDistanceBeforeRageGain * 16;
+			int minSafeDistSqr = config.TileDistanceUntilTargetTooFar * 16;
 			minSafeDistSqr *= minSafeDistSqr;
-			int maxSafeDistSqr = config.MaximumTileDistanceBeforeRageGain * 16;
+			int maxSafeDistSqr = config.TileDistanceUntilTargetTooClose * 16;
 			maxSafeDistSqr *= maxSafeDistSqr;
 			
 			if( distSqr > minSafeDistSqr ) {
-				this.AddRage( "too far", npc, config.RagePercentGainPerTickFromTargetFleeing );
+				this.AddRage( "too far", npc, config.RagePercentGainPerTickFromTargetTooFar );
 			}
 			if( distSqr < maxSafeDistSqr ) {
 				this.AddRage( "too near", npc, config.RagePercentGainPerTickFromTargetTooClose );
