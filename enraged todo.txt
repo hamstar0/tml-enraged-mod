@@ -1,9 +1,9 @@
 v1
 -	Define rage meter overlay ("hooks" YABHB mod's bars)
+
 -	Implement enrage mode (buff)
 	-	Implement fx
 		-	Screen shakes
-
 		-	Rage noise
 		-	Boss vibrates
 	-	Implement behaviors
