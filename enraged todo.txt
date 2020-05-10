@@ -3,8 +3,8 @@ v1
 -	Implement enrage mode (buff)
 	-	Implement fx
 		-	Screen shakes
-		-	Rage noise
 
+		-	Rage noise
 		-	Boss vibrates
 	-	Implement behaviors
 		-	Screen shakes + boss vibrates + rage noise

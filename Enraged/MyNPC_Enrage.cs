@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using HamstarHelpers.Tiles;
 using HamstarHelpers.Helpers.XNA;
@@ -13,6 +14,8 @@ namespace Enraged {
 			this.RageBuildupPercent = 0f;
 
 			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), EnragedConfig.Instance.RageDurationTicks );
+
+			Main.PlaySound( SoundID.NPCHit57, npc.Center );
 		}
 
 
@@ -61,7 +64,7 @@ namespace Enraged {
 					drawColor = XNAColorHelpers.Mul( drawColor, newColor );
 
 					// Add shakes
-					npc.scale = ((Main.rand.NextFloat() * 0.1f) - 0.05f) + this.BaseScale;
+					npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + this.BaseScale;
 				} else {
 					this.BaseScale = npc.scale;
 				}
