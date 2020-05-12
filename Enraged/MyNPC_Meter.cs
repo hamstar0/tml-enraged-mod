@@ -24,17 +24,17 @@ namespace Enraged {
 			var origin = new Vector2( gauge.Width/2, gauge.Height/2 );
 			float rot = MathHelper.ToRadians( this.RageBuildupPercent * 180f );
 			position -= Main.screenPosition;
-			position.Y -= 8f;
+			position.Y -= 12f;
 
 			float opacity = 0.05f + (this.RageBuildupPercent * 0.95f);
 			opacity += (1f - opacity) * Math.Min( this.RecentRagePercentChange * 60f, 1f );
 //DebugHelpers.Print( "opac", "opac:"+opacity.ToString("N2")+", perc:"+this.RageBuildupPercent.ToString("N2")+", change%:"+(this.RecentRagePercentChange * 60f));
 
-			double secPerc = (double)DateTime.Now.Millisecond / 1000d;
-			secPerc = (DateTime.Now.Second & 1) == 1 ? 1f - secPerc : secPerc;
-			float dialScale = (float)Math.Sin( secPerc * (1f + (16f * this.RageBuildupPercent)) );
-			dialScale *= 0.15f;
-			dialScale += 1.25f;
+			//double secPerc = (double)DateTime.Now.Millisecond / 1000d;
+			//secPerc = (DateTime.Now.Second & 1) == 1 ? 1f - secPerc : secPerc;
+			//float dialScale = (float)Math.Sin( secPerc * (1f + (32f * this.RageBuildupPercent)) );
+			//dialScale *= 0.05f;
+			float dialScale = 1.1f;
 
 			Main.spriteBatch.Draw( gauge, position, null, Color.White * opacity, 0f, origin, dialScale, SpriteEffects.None, 1f );
 			Main.spriteBatch.Draw( dial, position, null, Color.White * opacity, rot, origin, dialScale, SpriteEffects.None, 1f );
