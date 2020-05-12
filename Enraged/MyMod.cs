@@ -2,7 +2,7 @@ using Terraria.ModLoader;
 
 
 namespace Enraged {
-	public class EnragedMod : Mod {
+	public partial class EnragedMod : Mod {
 		public static string GithubUserName => "hamstar0";
 		public static string GithubProjectName => "tml-enraged-mod";
 
