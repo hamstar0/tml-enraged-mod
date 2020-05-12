@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.Draw;
+using HamstarHelpers.Helpers.Debug;
 using Enraged.Buffs;
 
 
@@ -11,6 +12,8 @@ namespace Enraged {
 		private int TargetUnharmedByMe = 0;
 
 		private int TargetDamageBuffer = 0;
+
+		private float RecentRagePercentChange = 0;
 
 
 		////////////////
@@ -54,6 +57,15 @@ namespace Enraged {
 			if( npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
 				this.UpdateEnragedEffects( npc, targetPlr );
 			}
+
+			if( this.RecentRagePercentChange > 0f ) {
+				this.RecentRagePercentChange -= 1f / 7200f;
+				if( this.RecentRagePercentChange < 0f ) {
+					this.RecentRagePercentChange = 0f;
+				} else if( this.RecentRagePercentChange > (1f / 60f) ) {
+					this.RecentRagePercentChange = 1f / 60f;
+				}
+			}
 		}
 
 
@@ -64,36 +76,49 @@ namespace Enraged {
 				return false;
 			}
 
-			float alpha = Lighting.Brightness(
-				(int)(npc.Center.X / 16f),
-				(int)(npc.gfxOffY + (npc.Center.Y/16f))
-			);
-
-			position = new Vector2(
-				npc.position.X + (npc.width / 2),
-				npc.position.Y + npc.gfxOffY );
-			if( hbPosition == 1 ) {
-				position.Y += npc.height + 10f + Main.NPCAddHeight( npc.whoAmI );
-			} else if( hbPosition == 2 ) {
-				position.Y -= 24f + (Main.NPCAddHeight(npc.whoAmI) / 2f);
+			if( this.RageBuildupPercent < 0.01f ) {
+				return base.DrawHealthBar( npc, hbPosition, ref scale, ref position );
 			}
 
-			Main.instance.DrawHealthBar( position.X, position.Y, npc.life, npc.lifeMax, alpha, scale );
+			Texture2D gauge = this.mod.GetTexture( "UI/PressureGauge" );
+			Texture2D dial = this.mod.GetTexture( "UI/PressureGaugeDial" );
 
-			var rect = new Rectangle(
-				(int)(position.X - Main.screenPosition.X - (15.5f * scale)),	//16f
-				(int)(position.Y - Main.screenPosition.Y + (8.5f * scale)),	//6f
-				(int)(32f * scale),
-				(int)(2f * scale)  //3f
-			);
+			var origin = new Vector2( gauge.Width/2, gauge.Height/2 );
+			float rot = MathHelper.ToRadians( this.RageBuildupPercent * 180f );
+			position -= Main.screenPosition;
+			position.Y -= 8f;
 
-			DrawHelpers.DrawBorderedRect( Main.spriteBatch, Color.Lerp(Color.Red, Color.Black, 0.8f), null, rect, 1 );
+			float opacity = 0.05f + (this.RageBuildupPercent * 0.95f);
+			opacity += (1f - opacity) * Math.Min( this.RecentRagePercentChange * 60f, 1f );
+//DebugHelpers.Print( "opac", "opac:"+opacity.ToString("N2")+", perc:"+this.RageBuildupPercent.ToString("N2")+", change%:"+(this.RecentRagePercentChange * 60f));
 
-			rect.Width = (int)( 30f * scale * this.RageBuildupPercent );
-			//Main.spriteBatch.Draw( Main.magicPixel, rect, Color.Red );
-			DrawHelpers.DrawBorderedRect( Main.spriteBatch, Color.Red, null, rect, 1 );
+			double secPerc = (double)DateTime.Now.Millisecond / 1000d;
+			secPerc = (DateTime.Now.Second & 1) == 1 ? 1f - secPerc : secPerc;
+			float dialScale = (float)Math.Sin( secPerc * (1f + (16f * this.RageBuildupPercent)) );
+			dialScale *= 0.15f;
+			dialScale += 1.25f;
 
-			return false;
+			Main.spriteBatch.Draw( gauge, position, null, Color.White * opacity, 0f, origin, dialScale, SpriteEffects.None, 1f );
+			Main.spriteBatch.Draw( dial, position, null, Color.White * opacity, rot, origin, dialScale, SpriteEffects.None, 1f );
+
+			if( (Main.MouseScreen - position).LengthSquared() < 2304f ) {
+				string percStr = (this.RageBuildupPercent * 100f).ToString("N0") + "%";
+				var percColor = Color.Lerp( Color.Lime, Color.Red, this.RageBuildupPercent );
+
+				Utils.DrawBorderStringFourWay(
+					sb: Main.spriteBatch,
+					font: Main.fontMouseText,
+					text: percStr,
+					x: Main.MouseScreen.X + 16f,
+					y: Main.MouseScreen.Y - 16f,
+					textColor: percColor,
+					borderColor: Color.Black,
+					origin: Vector2.Zero,
+					scale: 1.25f
+				);
+			}
+
+			return base.DrawHealthBar( npc, hbPosition, ref scale, ref position );
 		}
 	}
 }

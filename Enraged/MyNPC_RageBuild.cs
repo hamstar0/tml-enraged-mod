@@ -73,6 +73,7 @@ namespace Enraged {
 			}
 
 			this.RageBuildupPercent += addedPercent;
+			this.RecentRagePercentChange += addedPercent;
 
 			if( this.RageBuildupPercent < 0 ) {
 				this.RageBuildupPercent = 0;

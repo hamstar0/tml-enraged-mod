@@ -13,6 +13,7 @@ namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
 		public void Enrage( NPC npc ) {
 			this.RageBuildupPercent = 0f;
+			this.RecentRagePercentChange = 0f;
 
 			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), EnragedConfig.Instance.RageDurationTicks );
 
