@@ -1,3 +1,6 @@
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 
@@ -21,6 +24,22 @@ namespace Enraged {
 
 		public override void Unload() {
 			EnragedMod.Instance = null;
+		}
+
+
+		////////////////
+
+		public override void AddRecipeGroups() {
+			RecipeGroup.RegisterGroup(
+				"Enraged: Strange Plants",
+				new RecipeGroup(
+					() => Language.GetTextValue("LegacyMisc.37")+" Strange Plant",
+					ItemID.StrangePlant1,
+					ItemID.StrangePlant2,
+					ItemID.StrangePlant3,
+					ItemID.StrangePlant4
+				)
+			);
 		}
 	}
 }
