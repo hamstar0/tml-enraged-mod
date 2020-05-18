@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ModLoader.Config;
 using Terraria.ModLoader;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Services.Timers;
+using HamstarHelpers.Helpers.DotNET.Extensions;
 using Enraged.Buffs;
 
 
@@ -65,12 +67,16 @@ namespace Enraged {
 		////////////////
 
 		public void AddRage( string context, NPC npc, float addedPercent ) {
-			if( addedPercent == 0f ) {
+			float scale = EnragedConfig.Instance.RageMeterScales.GetOrDefault( new NPCDefinition(npc.type) )?.Value ?? 1f;
+
+			if( scale == 0f || addedPercent == 0f ) {
 				return;
 			}
 			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
 				return;
 			}
+
+			addedPercent *= scale;
 
 			this.RageBuildupPercent += addedPercent;
 			this.RecentRagePercentChange += addedPercent;

@@ -1,12 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
+using Terraria.ID;
 using HamstarHelpers.Classes.UI.ModConfig;
+using HamstarHelpers.Helpers.DotNET.Reflection;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Services.Configs;
 
 
 namespace Enraged {
 	class MyFloatInputElement : FloatInputElement { }
+
+
+
+
+	class ConfigFloat {
+		[CustomModConfigItem( typeof( FloatInputElement ) )]
+		[Range( 0f, 100f )]
+		[DefaultValue( 1f )]
+		public float Value { get; set; } = 1f;
+
+
+		////
+
+		public ConfigFloat() { }
+
+		public ConfigFloat( float value ) {
+			this.Value = value;
+		}
+	}
 
 
 
@@ -115,5 +138,30 @@ namespace Enraged {
 		[Range( 0, 60 * 60 * 60 )]
 		[DefaultValue( 60 * 12 )]
 		public int TranqDebuffTickDuration { get; set; } = 60 * 12;
+
+
+		////////////////
+
+		public Dictionary<NPCDefinition, ConfigFloat> RageMeterScales { get; set; } = new Dictionary<NPCDefinition, ConfigFloat>();
+
+
+
+		////////////////
+
+		public void Initialize() {
+			this.RageMeterScales.Clear();
+
+			this.RageMeterScales[ new NPCDefinition(NPCID.QueenBee) ] = new ConfigFloat( 0f );
+			this.RageMeterScales[ new NPCDefinition(NPCID.WallofFlesh) ] = new ConfigFloat( 0f );
+			this.RageMeterScales[ new NPCDefinition(NPCID.Retinazer) ] = new ConfigFloat( 0f );
+			this.RageMeterScales[ new NPCDefinition(NPCID.Spazmatism) ] = new ConfigFloat( 0f );
+			this.RageMeterScales[ new NPCDefinition(NPCID.CultistBoss) ] = new ConfigFloat( 0f );
+			this.RageMeterScales[ new NPCDefinition(NPCID.MoonLordCore) ] = new ConfigFloat( 0f );
+
+			object _;
+			if( !ReflectionHelpers.RunMethod( typeof(ConfigManager), null, "Save", new object[] { this }, out _ ) ) {
+				LogHelpers.Alert( "Could not save config defaults." );
+			}
+		}
 	}
 }
