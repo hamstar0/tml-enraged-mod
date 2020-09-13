@@ -23,7 +23,9 @@ namespace Enraged.Buffs {
 			}
 
 			Timers.RunNow( () => {
-				for( int i = 0; i < EnragedConfig.Instance.TimesToRunAIPerTickWhileEnraged; i++ ) {
+				int times = EnragedConfig.Instance.Get<int>( nameof(EnragedConfig.TimesToRunAIPerTickWhileEnraged) );
+
+				for( int i = 0; i < times; i++ ) {
 					npc.AI();
 				}
 			} );

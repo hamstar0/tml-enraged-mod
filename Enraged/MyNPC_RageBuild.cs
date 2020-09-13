@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader.Config;
@@ -17,20 +18,23 @@ namespace Enraged {
 			this.TargetUnharmedByMe++;
 
 			if( this.IsTargetUnharmedByMe ) {
-				this.AddRage( "unharmed", npc, config.RagePercentGainPerTickFromUnharmedTarget );
+				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromUnharmedTarget );
+				this.AddRage( "unharmed", npc, config.Get<float>(entryName) );
 			}
 
 			int distSqr = (int)Vector2.DistanceSquared( npc.Center, targetPlr.Center );
-			int minSafeDistSqr = config.TileDistanceUntilTargetTooFar * 16;
+			int minSafeDistSqr = config.Get<int>( nameof(EnragedConfig.TileDistanceUntilTargetTooFar) ) * 16;
 			minSafeDistSqr *= minSafeDistSqr;
-			int maxSafeDistSqr = config.TileDistanceUntilTargetTooClose * 16;
+			int maxSafeDistSqr = config.Get<int>( nameof(EnragedConfig.TileDistanceUntilTargetTooClose) ) * 16;
 			maxSafeDistSqr *= maxSafeDistSqr;
 			
 			if( distSqr > minSafeDistSqr ) {
-				this.AddRage( "too far", npc, config.RagePercentGainPerTickFromTargetTooFar );
+				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooFar );
+				this.AddRage( "too far", npc, config.Get<float>(entryName) );
 			}
 			if( distSqr < maxSafeDistSqr ) {
-				this.AddRage( "too near", npc, config.RagePercentGainPerTickFromTargetTooClose );
+				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooClose );
+				this.AddRage( "too near", npc, config.Get<float>( entryName ) );
 			}
 		}
 
@@ -43,8 +47,11 @@ namespace Enraged {
 				var config = EnragedConfig.Instance;
 
 				if( Timers.GetTimerTickDuration(timerName) <= 0 ) {
-					Timers.SetTimer( timerName, config.CooldownTickDurationBetweenHits, false, () => false );
-					this.AddRage( "on hit", npc, config.RagePercentGainPerHitTaken );
+					int cooldownTicks = config.Get<int>( nameof(EnragedConfig.CooldownTickDurationBetweenHits) );
+					float ragePerc = config.Get<float>( nameof(EnragedConfig.RagePercentGainPerHitTaken) );
+
+					Timers.SetTimer( timerName, cooldownTicks, false, () => false );
+					this.AddRage( "on hit", npc, ragePerc );
 				}
 			}
 		}
@@ -57,8 +64,10 @@ namespace Enraged {
 				this.TargetDamageBuffer += crit ? damage * 2 : damage;
 
 				while( this.TargetDamageBuffer > 10 ) {
+					float ragePerc = config.Get<float>( nameof(EnragedConfig.RagePercentGainPerHitTaken) );
+
 					this.TargetDamageBuffer -= 10;
-					this.AddRage( "target hit", npc, config.RagePercentGainPerTargetHitPer10 );
+					this.AddRage( "target hit", npc, ragePerc );
 				}
 			}
 		}
@@ -67,7 +76,9 @@ namespace Enraged {
 		////////////////
 
 		public void AddRage( string context, NPC npc, float addedPercent ) {
-			float scale = EnragedConfig.Instance.RageMeterScales.GetOrDefault( new NPCDefinition(npc.type) )?.Value ?? 1f;
+			var config = EnragedConfig.Instance;
+			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof(EnragedConfig.RageMeterScales) );
+			float scale = rageScale.GetOrDefault( new NPCDefinition(npc.type) )?.Value ?? 1f;
 
 			if( scale == 0f || addedPercent == 0f ) {
 				return;
@@ -88,7 +99,7 @@ namespace Enraged {
 				this.Enrage( npc );
 			}
 
-			if( EnragedConfig.Instance.DebugModeInfo ) {
+			if( config.DebugModeInfo ) {
 				DebugHelpers.Print(
 					context+npc.whoAmI,
 					"Boss "+npc.FullName+" enraged from "+context+" by "+addedPercent+"; is now "+this.RageBuildupPercent

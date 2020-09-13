@@ -1,9 +1,9 @@
 ﻿using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using HamstarHelpers.Helpers.Debug;
 using Enraged.Buffs;
-using Terraria.ID;
 using Enraged.Items;
 
 
@@ -22,7 +22,9 @@ namespace Enraged {
 
 		////
 
-		public bool IsTargetUnharmedByMe => this.TargetUnharmedByMe >= EnragedConfig.Instance.TargetUnharmedTickThreshold;
+		public bool IsTargetUnharmedByMe =>
+			this.TargetUnharmedByMe >=
+			EnragedConfig.Instance.Get<int>( nameof(EnragedConfig.TargetUnharmedTickThreshold) );
 
 
 		////////////////
@@ -73,7 +75,7 @@ namespace Enraged {
 
 		public override void SetupShop( int type, Chest shop, ref int nextSlot ) {
 			if( type == NPCID.ArmsDealer ) {
-				if( EnragedConfig.Instance.TranqSoldFromArmsDealer ) {
+				if( EnragedConfig.Instance.Get<bool>( nameof(EnragedConfig.TranqSoldFromArmsDealer) ) ) {
 					var item = new Item();
 					item.SetDefaults( ModContent.ItemType<TranquilizerDartItem>() );
 

@@ -36,24 +36,28 @@ namespace Enraged.Projectiles {
 		////
 
 		public override void OnHitNPC( NPC target, int damage, float knockback, bool crit ) {
+			var config = EnragedConfig.Instance;
+
 			if( target.boss ) {
 				var mynpc = target.GetGlobalNPC<EnragedGlobalNPC>();
-				mynpc.AddRage( "tranq", target, EnragedConfig.Instance.TranqRagePercentAdd );
+				mynpc.AddRage( "tranq", target, config.Get<int>( nameof(EnragedConfig.TranqRagePercentAdd) ) );
 			} else {
-				target.AddBuff( BuffID.Weak, EnragedConfig.Instance.TranqDebuffTickDuration );
-				target.AddBuff( BuffID.Slow, EnragedConfig.Instance.TranqDebuffTickDuration );
-				target.AddBuff( BuffID.Confused, EnragedConfig.Instance.TranqDebuffTickDuration );
+				target.AddBuff( BuffID.Weak, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
+				target.AddBuff( BuffID.Slow, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
+				target.AddBuff( BuffID.Confused, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
 			}
 		}
 
 		public override bool CanHitPvp( Player target ) {
-			return EnragedConfig.Instance.TranqIsPvP;
+			return EnragedConfig.Instance.Get<bool>( nameof(EnragedConfig.TranqIsPvP) );
 		}
 
 		public override void OnHitPlayer( Player target, int damage, bool crit ) {
-			target.AddBuff( BuffID.Weak, EnragedConfig.Instance.TranqDebuffTickDuration );
-			target.AddBuff( BuffID.Slow, EnragedConfig.Instance.TranqDebuffTickDuration );
-			target.AddBuff( BuffID.Confused, EnragedConfig.Instance.TranqDebuffTickDuration );
+			var config = EnragedConfig.Instance;
+
+			target.AddBuff( BuffID.Weak, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
+			target.AddBuff( BuffID.Slow, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration ) ) );
+			target.AddBuff( BuffID.Confused, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration ) ) );
 		}
 	}
 }

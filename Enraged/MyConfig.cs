@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ID;
 using HamstarHelpers.Classes.UI.ModConfig;
 using HamstarHelpers.Helpers.DotNET.Reflection;
 using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Services.Configs;
 
 
 namespace Enraged {
@@ -15,7 +15,7 @@ namespace Enraged {
 
 
 
-	class ConfigFloat {
+	public class ConfigFloat {
 		[CustomModConfigItem( typeof( FloatInputElement ) )]
 		[Range( 0f, 100f )]
 		[DefaultValue( 1f )]
@@ -34,8 +34,8 @@ namespace Enraged {
 
 
 
-	class EnragedConfig : StackableModConfig {
-		public static EnragedConfig Instance => ModConfigStack.GetMergedConfigs<EnragedConfig>();
+	public partial class EnragedConfig : ModConfig {
+		public static EnragedConfig Instance => ModContent.GetInstance<EnragedConfig>();
 
 
 

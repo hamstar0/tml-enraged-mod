@@ -29,7 +29,7 @@ namespace Enraged.Items {
 		////
 
 		public override void AddRecipes() {
-			if( !EnragedConfig.Instance.TranqHasRecipe ) {
+			if( !EnragedConfig.Instance.Get<bool>( nameof(EnragedConfig.TranqHasRecipe) ) ) {
 				return;
 			}
 

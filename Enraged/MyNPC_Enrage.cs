@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using HamstarHelpers.Tiles;
+using HamstarHelpers.Classes.CameraAnimation;
 using HamstarHelpers.Helpers.XNA;
-using HamstarHelpers.Services.Camera;
 using Enraged.Buffs;
+using Enraged.Tiles;
 
 
 namespace Enraged {
@@ -15,7 +15,9 @@ namespace Enraged {
 			this.RageBuildupPercent = 0f;
 			this.RecentRagePercentChange = 0f;
 
-			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), EnragedConfig.Instance.RageDurationTicks );
+			int ticks = EnragedConfig.Instance.Get<int>( nameof(EnragedConfig.RageDurationTicks) );
+
+			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), ticks );
 
 			Main.PlaySound( SoundID.NPCHit57, npc.Center );
 		}
@@ -25,13 +27,15 @@ namespace Enraged {
 		
 		private void UpdateEnragedEffects( NPC npc, Player targetPlr ) {
 			var config = EnragedConfig.Instance;
+			int thickness = config.Get<int>( nameof(EnragedConfig.EnragedBrambleTrailThickness) );
+			int density = config.Get<int>( nameof(EnragedConfig.EnragedBrambleTrailDensity ) );
 
-			if( config.EnragedBrambleTrailThickness > 0 && config.EnragedBrambleTrailDensity > 0f ) {
+			if( thickness > 0 && density > 0f ) {
 				CursedBrambleTile.CreateBramblePatchAt(
-					(int)( npc.Center.X / 16f ),
-					(int)( npc.Center.Y / 16f ),
-					config.EnragedBrambleTrailThickness,
-					config.EnragedBrambleTrailDensity
+					(int)(npc.Center.X / 16f),
+					(int)(npc.Center.Y / 16f),
+					thickness,
+					density
 				);
 			}
 		}
@@ -71,23 +75,43 @@ namespace Enraged {
 		////
 
 		private void ApplyVisualFx( NPC npc, ref Color drawColor ) {
+			int npcWho = npc.whoAmI;
+
+			float getMagnitude() {
+				NPC mynpc = Main.npc[npcWho];
+				if( mynpc.active != true || !mynpc.boss ) {
+					CameraShaker.Current = null;
+					return 0f;
+				}
+
+				float dist = (npc.Center - Main.LocalPlayer.Center).Length();
+				float magnitudePercent = 1f - (dist / 768f);
+				return 8f * magnitudePercent;
+			}
+
+			//
+
 			// Add red tint
 			var newColor = new Color( 255, 128, 128 );
 			drawColor = XNAColorHelpers.Mul( drawColor, newColor );
 
 			// Add NPC vibration
-			npc.scale = ( ( Main.rand.NextFloat() * 0.2f ) - 0.1f ) + this.BaseScale;
+			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + this.BaseScale;
 
-			// Add screen shake
-			float dist = (npc.Center - Main.LocalPlayer.Center).Length();
-			float magnitudePercent = 1f - (dist / 768f);
-			float magnitude = 8f * magnitudePercent;
 			//magnitude *= Main.LocalPlayer.Center.Y == 0f
 			//	? magnitude
 			//	: magnitude * 4f;
-			if( magnitude > 0f ) {
-				Camera.ApplyShake( magnitude, 30, 15 );
-			}
+			CameraShaker.Current = new CameraShaker(
+				name: "EnragedShake",
+				peakMagnitude: getMagnitude(),
+				toDuration: 0,
+				lingerDuration: 30,
+				froDuration: 0,
+				isSmoothed: false,
+				onRun: () => {
+					CameraShaker.Current.SetPeakMagnitude( getMagnitude() );
+				}
+			);
 		}
 	}
 }
