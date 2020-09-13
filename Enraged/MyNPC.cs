@@ -24,7 +24,7 @@ namespace Enraged {
 
 		public bool IsTargetUnharmedByMe =>
 			this.TargetUnharmedByMe >=
-			EnragedConfig.Instance.Get<int>( nameof(EnragedConfig.TargetUnharmedTickThreshold) );
+				EnragedConfig.Instance.Get<int>( nameof(EnragedConfig.TargetUnharmedTickThreshold) );
 
 
 		////////////////

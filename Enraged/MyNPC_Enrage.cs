@@ -28,7 +28,7 @@ namespace Enraged {
 		private void UpdateEnragedEffects( NPC npc, Player targetPlr ) {
 			var config = EnragedConfig.Instance;
 			int thickness = config.Get<int>( nameof(EnragedConfig.EnragedBrambleTrailThickness) );
-			int density = config.Get<int>( nameof(EnragedConfig.EnragedBrambleTrailDensity ) );
+			int density = (int)config.Get<float>( nameof(EnragedConfig.EnragedBrambleTrailDensity) );
 
 			if( thickness > 0 && density > 0f ) {
 				CursedBrambleTile.CreateBramblePatchAt(
