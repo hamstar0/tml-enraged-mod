@@ -5,8 +5,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using HamstarHelpers.Classes.CameraAnimation;
 using HamstarHelpers.Helpers.XNA;
+using CursedBrambles.Tiles;
 using Enraged.Buffs;
-using Enraged.Tiles;
 
 
 namespace Enraged {
