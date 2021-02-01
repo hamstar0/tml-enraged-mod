@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using HamstarHelpers.Helpers.Debug;
 using CursedBrambles.Tiles;
 using Enraged.Buffs;
 
@@ -29,10 +30,10 @@ namespace Enraged {
 
 			var config = EnragedConfig.Instance;
 			int thickness = config.Get<int>( nameof(EnragedConfig.EnragedBrambleTrailThickness) );
-			int density = (int)config.Get<float>( nameof(EnragedConfig.EnragedBrambleTrailDensity) );
+			float density = config.Get<float>( nameof(EnragedConfig.EnragedBrambleTrailDensity) );
 
 			if( thickness > 0 && density > 0f ) {
-				CursedBrambleTile.CreateBramblePatchAt(
+				int created = CursedBrambleTile.CreateBramblePatchAt(
 					tileX: (int)npc.Center.X / 16,
 					tileY: (int)npc.Center.Y / 16,
 					radius: thickness,
