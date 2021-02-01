@@ -37,16 +37,16 @@ namespace Enraged {
 
 		////////////////
 
-		 private bool _IsUpdating = false;
+		// private bool _IsUpdating = false;
 
 		public override bool PreAI( NPC npc ) {
-			if( npc.boss && !this._IsUpdating ) {
+			if( npc.boss /*&& !this._IsUpdating*/ ) {
 				if( npc.HasPlayerTarget ) {
 					Player player = Main.player[npc.target];
 					if( player?.active == true ) {
-						this._IsUpdating = true;
+						//this._IsUpdating = true;
 						this.UpdateRageBehavior( npc, player );
-						this._IsUpdating = false;
+						//this._IsUpdating = false;
 					}
 				}
 			}
@@ -74,13 +74,25 @@ namespace Enraged {
 		////
 
 		public override void SetupShop( int type, Chest shop, ref int nextSlot ) {
-			if( type == NPCID.ArmsDealer ) {
-				if( EnragedConfig.Instance.Get<bool>( nameof(EnragedConfig.TranqSoldFromArmsDealer) ) ) {
+			var config = EnragedConfig.Instance;
+
+			switch( type ) {
+			case NPCID.WitchDoctor:
+				if( config.Get<bool>( nameof(config.TranqSoldFromWitchDoctor) ) ) {
 					var item = new Item();
 					item.SetDefaults( ModContent.ItemType<TranquilizerDartItem>() );
 
 					shop.item[ nextSlot++ ] = item;
 				}
+				break;
+			case NPCID.ArmsDealer:
+				if( config.Get<bool>( nameof(config.TranqSoldFromArmsDealer) ) ) {
+					var item = new Item();
+					item.SetDefaults( ModContent.ItemType<TranquilizerDartItem>() );
+
+					shop.item[ nextSlot++ ] = item;
+				}
+				break;
 			}
 		}
 	}

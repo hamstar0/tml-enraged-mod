@@ -40,11 +40,14 @@ namespace Enraged.Projectiles {
 
 			if( target.boss ) {
 				var mynpc = target.GetGlobalNPC<EnragedGlobalNPC>();
-				mynpc.AddRage( "tranq", target, config.Get<float>( nameof(EnragedConfig.TranqRagePercentAdd) ) );
+				mynpc.AddRage( "tranq", target, config.Get<float>( nameof(config.TranqRagePercentAdd) ) );
 			} else {
-				target.AddBuff( BuffID.Weak, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
-				target.AddBuff( BuffID.Slow, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
-				target.AddBuff( BuffID.Confused, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
+				target.AddBuff( BuffID.Weak, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
+				target.AddBuff( BuffID.Slow, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
+
+				if( config.Get<bool>( nameof(config.TranqCausesConfuse) ) ) {
+					target.AddBuff( BuffID.Confused, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
+				}
 			}
 		}
 
@@ -55,9 +58,12 @@ namespace Enraged.Projectiles {
 		public override void OnHitPlayer( Player target, int damage, bool crit ) {
 			var config = EnragedConfig.Instance;
 
-			target.AddBuff( BuffID.Weak, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration) ) );
-			target.AddBuff( BuffID.Slow, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration ) ) );
-			target.AddBuff( BuffID.Confused, config.Get<int>( nameof(EnragedConfig.TranqDebuffTickDuration ) ) );
+			target.AddBuff( BuffID.Weak, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
+			target.AddBuff( BuffID.Slow, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
+
+			if( config.Get<bool>( nameof(config.TranqCausesConfuse) ) ) {
+				target.AddBuff( BuffID.Confused, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
+			}
 		}
 	}
 }

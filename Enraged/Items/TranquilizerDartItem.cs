@@ -20,24 +20,17 @@ namespace Enraged.Items {
 			this.item.ranged = true;
 			this.item.consumable = true;
 			this.item.knockBack = 2f;
-			this.item.value = 10000;
-			this.item.rare = 2;
+			this.item.value = 1000;
+			this.item.rare = ItemRarityID.Green;
 			this.item.shoot = ModContent.ProjectileType<TranquilizerDartProjectile>();
 			this.item.shootSpeed = 2f;
 		}
 
-		////
+
+		////////////////
 
 		public override void AddRecipes() {
-			if( !EnragedConfig.Instance.Get<bool>( nameof(EnragedConfig.TranqHasRecipe) ) ) {
-				return;
-			}
-
-			ModRecipe recipe = new ModRecipe( mod );
-			recipe.AddIngredient( ItemID.PoisonDart, 10 );
-			recipe.AddRecipeGroup( "Enraged: Strange Plants" );
-			recipe.AddTile( TileID.WorkBenches );
-			recipe.SetResult( this, 10 );
+			var recipe = new TranquilizerDartItemRecipe( this );
 			recipe.AddRecipe();
 		}
 	}

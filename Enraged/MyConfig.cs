@@ -104,10 +104,10 @@ namespace Enraged {
 
 		////////////////
 
-		[Header( "Enraged effects settings" )]
-		[Range( 1, 10 )]
-		[DefaultValue( 2 )]
-		public int TimesToRunAIPerTickWhileEnraged { get; set; } = 2;
+		//[Header( "Enraged effects settings" )]
+		//[Range( 1, 10 )]
+		//[DefaultValue( 2 )]
+		//public int TimesToRunAIPerTickWhileEnraged { get; set; } = 2;
 
 		[Range( 1, 64 )]
 		[DefaultValue( 5 )]
@@ -124,8 +124,11 @@ namespace Enraged {
 		[DefaultValue( true )]
 		public bool TranqHasRecipe { get; set; } = true;
 
+		[DefaultValue( false )]
+		public bool TranqSoldFromArmsDealer { get; set; } = false;
+
 		[DefaultValue( true )]
-		public bool TranqSoldFromArmsDealer { get; set; } = true;
+		public bool TranqSoldFromWitchDoctor { get; set; } = true;
 
 		[DefaultValue( true )]
 		public bool TranqIsPvP { get; set; } = true;
@@ -138,6 +141,9 @@ namespace Enraged {
 		[Range( 0, 60 * 60 * 60 )]
 		[DefaultValue( 60 * 12 )]
 		public int TranqDebuffTickDuration { get; set; } = 60 * 12;
+
+		[DefaultValue( false )]
+		public bool TranqCausesConfuse { get; set; } = false;
 
 
 		////////////////
