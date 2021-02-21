@@ -9,20 +9,32 @@ using Enraged.Buffs;
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
+		private Color LitColor = Color.White;
+
+
+
+		////////////////
+
+		public override void PostDraw( NPC npc, SpriteBatch spriteBatch, Color drawColor ) {
+			this.LitColor = drawColor;
+		}
+
+		////////////////
+
 		public override bool? DrawHealthBar( NPC npc, byte hbPosition, ref float scale, ref Vector2 position ) {
 			if( npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
 				return false;
 			}
 
 			if( this.RageBuildupPercent < 0.01f ) {
-				return base.DrawHealthBar( npc, hbPosition, ref scale, ref position );
+				return true;
 			}
-
+			
 //DebugHelpers.Print( "rages", "built%: "+this.RageBuildupPercent.ToString("N2")
 //	+", change%: "+(this.RecentRagePercentChange * 60f).ToString("N3") );
 			this.DrawRageGauge( scale, position, this.RageBuildupPercent, this.RecentRagePercentChange );
 
-			return base.DrawHealthBar( npc, hbPosition, ref scale, ref position );
+			return true;
 		}
 
 
@@ -37,8 +49,8 @@ namespace Enraged {
 			float rot = MathHelper.ToRadians( ragePercent * 180f );
 			position -= Main.screenPosition;
 			position.Y -= 12f;
-			position.X += (Main.rand.NextFloat(shake) - 0.5f) * 3f;
-			position.Y += (Main.rand.NextFloat(shake) - 0.5f) * 3f;
+			position.X += (Main.rand.NextFloat(shake) - 0.5f) * 4f;
+			position.Y += (Main.rand.NextFloat(shake) - 0.5f) * 4f;
 
 			float opacity = 0.1f + (ragePercent * 0.9f);
 			opacity += (1f - opacity) * shake;
@@ -51,11 +63,16 @@ namespace Enraged {
 			float gaugeScale = (scale * 0.9f) + (shake * 0.25f);
 			gaugeScale = (0.65f * gaugeScale) + (0.35f * ragePercent);
 
+			float gaugeLerp = (ragePercent * 0.25f) + (ragePercent * 0.75f * Main.rand.NextFloat());
+			Color gaugeColor = Color.Lerp( this.LitColor, Color.White, gaugeLerp );
+			gaugeColor *= opacity * pulse * 0.85f;
+			Color dialColor = Color.White * opacity * pulse * pulse;
+
 			Main.spriteBatch.Draw(
 				texture: gauge,
 				position: position,
 				sourceRectangle: null,
-				color: Color.White * opacity * pulse,
+				color: gaugeColor,
 				rotation: 0f,
 				origin: origin,
 				scale: gaugeScale,
@@ -66,7 +83,7 @@ namespace Enraged {
 				texture: dial,
 				position: position,
 				sourceRectangle: null,
-				color: Color.White * opacity * pulse * pulse,
+				color: dialColor,
 				rotation: rot,
 				origin: origin,
 				scale: gaugeScale,
