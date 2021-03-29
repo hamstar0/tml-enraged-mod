@@ -103,6 +103,17 @@ namespace Enraged {
 
 		////////////////
 
+		public override void HitEffect( NPC npc, int hitDirection, double damage ) {
+			this.AdjustRageOnHitIf( npc );
+		}
+
+		public override void OnHitPlayer( NPC npc, Player target, int damage, bool crit ) {
+			this.AdjustRageOnHitToPlayerIf( npc, target, damage, crit );
+		}
+
+
+		////////////////
+
 		public override void DrawEffects( NPC npc, ref Color drawColor ) {
 			if( npc.boss ) {
 				if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {

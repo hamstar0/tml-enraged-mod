@@ -142,7 +142,7 @@ namespace Enraged {
 		public int TranqDebuffTickDuration { get; set; } = 60 * 12;
 
 		[DefaultValue( false )]
-		public bool TranqCausesConfuse { get; set; } = false;
+		public bool TranqCausesConfuseToNonBossEnemies { get; set; } = false;
 
 
 		////////////////

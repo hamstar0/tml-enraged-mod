@@ -38,14 +38,14 @@ namespace Enraged.Projectiles {
 		public override void OnHitNPC( NPC target, int damage, float knockback, bool crit ) {
 			var config = EnragedConfig.Instance;
 
-			if( target.boss ) {
+			if( EnragedGlobalNPC.CanEnrage(target) ) {
 				var mynpc = target.GetGlobalNPC<EnragedGlobalNPC>();
-				mynpc.AddRage( "tranq", target, config.Get<float>( nameof(config.TranqRagePercentAdd) ) );
-			} else {
+				mynpc.AddRageIf( "tranq", target, config.Get<float>( nameof(config.TranqRagePercentAdd) ) );
+			} else if( !target.boss ) {
 				target.AddBuff( BuffID.Weak, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
 				target.AddBuff( BuffID.Slow, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
 
-				if( config.Get<bool>( nameof(config.TranqCausesConfuse) ) ) {
+				if( config.Get<bool>( nameof(config.TranqCausesConfuseToNonBossEnemies) ) ) {
 					target.AddBuff( BuffID.Confused, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
 				}
 			}
@@ -61,7 +61,7 @@ namespace Enraged.Projectiles {
 			target.AddBuff( BuffID.Weak, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
 			target.AddBuff( BuffID.Slow, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
 
-			if( config.Get<bool>( nameof(config.TranqCausesConfuse) ) ) {
+			if( config.Get<bool>( nameof(config.TranqCausesConfuseToNonBossEnemies) ) ) {
 				target.AddBuff( BuffID.Confused, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
 			}
 		}

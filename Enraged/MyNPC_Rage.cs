@@ -9,9 +9,9 @@ using Enraged.Buffs;
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
-		private bool CanEnrage( NPC npc, Player targetPlr ) {
+		public static bool CanEnrage( NPC npc ) {
 			var config = EnragedConfig.Instance;
-			var wl = config.Get<HashSet<NPCDefinition>>( nameof( config.NpcWhitelist ) );
+			var wl = config.Get<HashSet<NPCDefinition>>( nameof(config.NpcWhitelist) );
 			var def = new NPCDefinition( npc.type );
 
 			return wl.Contains( def );
@@ -21,7 +21,7 @@ namespace Enraged {
 		////////////////
 
 		private void UpdateRageIf( NPC npc, Player targetPlr ) {
-			if( !this.CanEnrage( npc, targetPlr ) ) {
+			if( !EnragedGlobalNPC.CanEnrage(npc) ) {
 				return;
 			}
 

@@ -21,22 +21,22 @@ namespace Enraged {
 
 			if( this.IsTargetUnharmedByMe ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromUnharmedTarget );
-				this.AddRage( "unharmed", npc, config.Get<float>(entryName) );
+				this.AddRageIf( "unharmed", npc, config.Get<float>( entryName ) );
 			}
 
 			int distSqr = (int)Vector2.DistanceSquared( npc.Center, targetPlr.Center );
-			int minSafeDistSqr = config.Get<int>( nameof(EnragedConfig.TileDistanceUntilTargetTooFar) ) * 16;
+			int minSafeDistSqr = config.Get<int>( nameof( EnragedConfig.TileDistanceUntilTargetTooFar ) ) * 16;
 			minSafeDistSqr *= minSafeDistSqr;
-			int maxSafeDistSqr = config.Get<int>( nameof(EnragedConfig.TileDistanceUntilTargetTooClose) ) * 16;
+			int maxSafeDistSqr = config.Get<int>( nameof( EnragedConfig.TileDistanceUntilTargetTooClose ) ) * 16;
 			maxSafeDistSqr *= maxSafeDistSqr;
-			
+
 			if( distSqr > minSafeDistSqr ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooFar );
-				this.AddRage( "too far", npc, config.Get<float>(entryName) );
+				this.AddRageIf( "too far", npc, config.Get<float>( entryName ) );
 			}
 			if( distSqr < maxSafeDistSqr ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooClose );
-				this.AddRage( "too near", npc, config.Get<float>( entryName ) );
+				this.AddRageIf( "too near", npc, config.Get<float>( entryName ) );
 			}
 
 			//
@@ -63,41 +63,51 @@ namespace Enraged {
 
 		////////////////
 
-		public override void HitEffect( NPC npc, int hitDirection, double damage ) {
-			if( npc.boss ) {
-				string timerName = "EnragedNpcHitCooldown_"+npc.whoAmI;
-				var config = EnragedConfig.Instance;
-
-				if( Timers.GetTimerTickDuration(timerName) <= 0 ) {
-					int cooldownTicks = config.Get<int>( nameof(EnragedConfig.CooldownTickDurationBetweenHits) );
-					float ragePerc = config.Get<float>( nameof(EnragedConfig.RagePercentGainPerHitTaken) );
-
-					Timers.SetTimer( timerName, cooldownTicks, false, () => false );
-					this.AddRage( "on hit", npc, ragePerc );
-				}
+		private void AdjustRageOnHitIf( NPC npc ) {
+			if( !EnragedGlobalNPC.CanEnrage(npc) ) {
+				return;
 			}
+
+			string timerName = "EnragedNpcHitCooldown_" + npc.whoAmI;
+			if( Timers.GetTimerTickDuration(timerName) > 0 ) {
+				return;
+			}
+
+			var config = EnragedConfig.Instance;
+			int cooldownTicks = config.Get<int>( nameof( EnragedConfig.CooldownTickDurationBetweenHits ) );
+			float ragePerc = config.Get<float>( nameof( EnragedConfig.RagePercentGainPerHitTaken ) );
+
+			Timers.SetTimer( timerName, cooldownTicks, false, () => false );
+			this.AddRageIf( "on hit", npc, ragePerc );
 		}
 
-		public override void OnHitPlayer( NPC npc, Player target, int damage, bool crit ) {
-			if( npc.boss && npc.HasPlayerTarget && npc.target == target.whoAmI ) {
-				var config = EnragedConfig.Instance;
 
-				this.TargetUnharmedByMe = 0;
-				this.TargetDamageBuffer += crit ? damage * 2 : damage;
+		private void AdjustRageOnHitToPlayerIf( NPC npc, Player target, int damage, bool crit ) {
+			if( !EnragedGlobalNPC.CanEnrage(npc) ) {
+				return;
+			}
 
-				while( this.TargetDamageBuffer > 10 ) {
-					float ragePerc = config.Get<float>( nameof(EnragedConfig.RagePercentGainPerHitTaken) );
+			if( !npc.HasPlayerTarget || npc.target != target.whoAmI ) {
+				return;
+			}
 
-					this.TargetDamageBuffer -= 10;
-					this.AddRage( "target hit", npc, ragePerc );
-				}
+			var config = EnragedConfig.Instance;
+
+			this.TargetUnharmedByMe = 0;
+			this.TargetDamageBuffer += crit ? damage * 2 : damage;
+
+			while( this.TargetDamageBuffer > 10 ) {
+				float ragePerc = config.Get<float>( nameof(EnragedConfig.RagePercentGainPerHitTaken) );
+
+				this.TargetDamageBuffer -= 10;
+				this.AddRageIf( "target hit", npc, ragePerc );
 			}
 		}
 
 
 		////////////////
 
-		public void AddRage( string context, NPC npc, float addedPercent ) {
+		public void AddRageIf( string context, NPC npc, float addedPercent ) {
 			var config = EnragedConfig.Instance;
 			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof(EnragedConfig.RageRateScales) );
 			float scale = rageScale.GetOrDefault( new NPCDefinition(npc.type) )?.Value

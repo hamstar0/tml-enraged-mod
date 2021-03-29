@@ -4,7 +4,6 @@ using Terraria;
 using Terraria.ModLoader;
 using HamstarHelpers.Classes.CameraAnimation;
 using HamstarHelpers.Helpers.XNA;
-using Enraged.Buffs;
 
 
 namespace Enraged {
