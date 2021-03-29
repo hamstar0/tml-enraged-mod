@@ -2,18 +2,31 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ModLoader.Config;
+using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Services.Timers;
 using HamstarHelpers.Helpers.DotNET.Extensions;
+using HamstarHelpers.Services.Timers;
 using Enraged.Buffs;
 
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
+		private bool CanRageChange( NPC npc, Player targetPlr ) {
+			var config = EnragedConfig.Instance;
+			var wlBosses = config.Get<HashSet<NPCDefinition>>( nameof(config.BossesWhitelist) );
+			var def = new NPCDefinition( npc.type );
+
+			return wlBosses.Contains( def );
+		}
+
+
+		////
+
 		private void UpdateRageState( NPC npc, Player targetPlr ) {
 			var config = EnragedConfig.Instance;
+			float oldRageValue = this.RagePercent;
 
 			this.TargetUnharmedByMe++;
 
@@ -35,6 +48,26 @@ namespace Enraged {
 			if( distSqr < maxSafeDistSqr ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooClose );
 				this.AddRage( "too near", npc, config.Get<float>( entryName ) );
+			}
+
+			//
+
+			if( this.RecentRagePercentChange > 0f ) {
+				this.RecentRagePercentChange -= 1f / 7200f;
+				if( this.RecentRagePercentChange < 0f ) {
+					this.RecentRagePercentChange = 0f;
+				} else if( this.RecentRagePercentChange > ( 1f / 60f ) ) {
+					this.RecentRagePercentChange = 1f / 60f;
+				}
+			}
+
+			//
+
+			var mymod = EnragedMod.Instance;
+			string uid = NPCID.GetUniqueKey( npc.type );
+
+			if( mymod.RageOverrides.ContainsKey( uid ) ) {
+				this.RagePercent = mymod.RageOverrides[uid].Invoke( npc.whoAmI, oldRageValue, this.RagePercent );
 			}
 		}
 
@@ -89,20 +122,20 @@ namespace Enraged {
 
 			addedPercent *= scale;
 
-			this.RageBuildupPercent += addedPercent;
+			this.RagePercent += addedPercent;
 			this.RecentRagePercentChange += addedPercent;
 
-			if( this.RageBuildupPercent < 0 ) {
-				this.RageBuildupPercent = 0;
-			} else if( this.RageBuildupPercent >= 1f ) {
-				this.RageBuildupPercent = 1f;
+			if( this.RagePercent < 0 ) {
+				this.RagePercent = 0;
+			} else if( this.RagePercent >= 1f ) {
+				this.RagePercent = 1f;
 				this.Enrage( npc );
 			}
 
 			if( config.DebugModeInfo ) {
 				DebugHelpers.Print(
 					context+npc.whoAmI,
-					"Boss "+npc.FullName+" enraged from "+context+" by "+addedPercent+"; is now "+this.RageBuildupPercent
+					"Boss "+npc.FullName+" enraged from "+context+" by "+addedPercent+"; is now "+this.RagePercent
 				);
 			}
 		}

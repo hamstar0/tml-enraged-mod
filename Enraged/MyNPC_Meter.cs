@@ -26,13 +26,13 @@ namespace Enraged {
 				return false;
 			}
 
-			if( this.RageBuildupPercent < 0.01f ) {
+			if( this.RagePercent < 0.01f ) {
 				return true;
 			}
 			
 //DebugHelpers.Print( "rages", "built%: "+this.RageBuildupPercent.ToString("N2")
 //	+", change%: "+(this.RecentRagePercentChange * 60f).ToString("N3") );
-			this.DrawRageGauge( scale, position, this.RageBuildupPercent, this.RecentRagePercentChange );
+			this.DrawRageGauge( scale, position, this.RagePercent, this.RecentRagePercentChange );
 
 			return true;
 		}

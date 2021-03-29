@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ID;
 using HamstarHelpers.Classes.UI.ModConfig;
-using HamstarHelpers.Helpers.DotNET.Reflection;
 using HamstarHelpers.Helpers.Debug;
 
 
@@ -46,7 +45,7 @@ namespace Enraged {
 
 
 		////////////////
-
+		
 		public bool DebugModeInfo { get; set; } = false;
 
 		////
@@ -148,26 +147,41 @@ namespace Enraged {
 
 		////////////////
 
+		public HashSet<NPCDefinition> BossesWhitelist { get; set; } = new HashSet<NPCDefinition> {
+			new NPCDefinition( NPCID.EyeofCthulhu ),
+			new NPCDefinition( NPCID.KingSlime ),
+			new NPCDefinition( NPCID.QueenBee ),
+			//new NPCDefinition( NPCID.BrainofCthulhu ),
+			//new NPCDefinition( NPCID.EaterofWorldsHead ),
+			new NPCDefinition( NPCID.SkeletronHead ),
+			//new NPCDefinition( NPCID.WallofFlesh ),
+			//new NPCDefinition( NPCID.TheDestroyer ),
+			//new NPCDefinition( NPCID.Retinazer ),
+			//new NPCDefinition( NPCID.Spazmatism ),
+			new NPCDefinition( NPCID.SkeletronPrime ),
+			new NPCDefinition( NPCID.Plantera ),
+			//new NPCDefinition( NPCID.Golem ),
+			//new NPCDefinition( NPCID.DukeFishron ),
+			//new NPCDefinition( NPCID.DD2Betsy ),
+			//new NPCDefinition( NPCID.MoonLordCore ),
+		};
+
 		public Dictionary<NPCDefinition, ConfigFloat> RageMeterScales { get; set; } = new Dictionary<NPCDefinition, ConfigFloat>();
 
 
 
 		////////////////
 
-		public void Initialize() {
-			this.RageMeterScales.Clear();
-
-			this.RageMeterScales[ new NPCDefinition(NPCID.QueenBee) ] = new ConfigFloat( 0f );
-			this.RageMeterScales[ new NPCDefinition(NPCID.WallofFlesh) ] = new ConfigFloat( 0f );
-			this.RageMeterScales[ new NPCDefinition(NPCID.Retinazer) ] = new ConfigFloat( 0f );
-			this.RageMeterScales[ new NPCDefinition(NPCID.Spazmatism) ] = new ConfigFloat( 0f );
-			this.RageMeterScales[ new NPCDefinition(NPCID.CultistBoss) ] = new ConfigFloat( 0f );
-			this.RageMeterScales[ new NPCDefinition(NPCID.MoonLordCore) ] = new ConfigFloat( 0f );
-
-			object _;
-			if( !ReflectionHelpers.RunMethod( typeof(ConfigManager), null, "Save", new object[] { this }, out _ ) ) {
-				LogHelpers.Alert( "Could not save config defaults." );
+		public override ModConfig Clone() {
+			var clone = base.Clone() as EnragedConfig;
+			if( clone == null ) {
+				return clone;
 			}
+
+			this.BossesWhitelist = new HashSet<NPCDefinition>( clone.BossesWhitelist );
+			this.RageMeterScales = new Dictionary<NPCDefinition, ConfigFloat>( clone.RageMeterScales );
+
+			return clone;
 		}
 	}
 }

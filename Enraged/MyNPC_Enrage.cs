@@ -10,7 +10,7 @@ using Enraged.Buffs;
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
 		public void Enrage( NPC npc ) {
-			this.RageBuildupPercent = 0f;
+			this.RagePercent = 0f;
 			this.RecentRagePercentChange = 0f;
 
 			int ticks = EnragedConfig.Instance.Get<int>( nameof(EnragedConfig.RageDurationTicks) );
@@ -23,7 +23,7 @@ namespace Enraged {
 
 		////////////////
 		
-		private void UpdateEnragedEffects( NPC npc, Player targetPlr ) {
+		private void UpdateRageEffects( NPC npc, Player targetPlr ) {
 			if( Main.netMode == NetmodeID.MultiplayerClient ) {
 				return;
 			}

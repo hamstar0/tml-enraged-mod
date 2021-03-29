@@ -18,7 +18,7 @@ namespace Enraged {
 
 		////////////////
 
-		public float RageBuildupPercent { get; private set; } = 0f;
+		public float RagePercent { get; private set; } = 0f;
 
 		////
 
@@ -45,30 +45,18 @@ namespace Enraged {
 					Player player = Main.player[npc.target];
 					if( player?.active == true ) {
 						//this._IsUpdating = true;
-						this.UpdateRageBehavior( npc, player );
+						this.UpdateRageIf( npc, player );
 						//this._IsUpdating = false;
 					}
 				}
 			}
 			return base.PreAI( npc );
 		}
-
-		private void UpdateRageBehavior( NPC npc, Player targetPlr ) {
-			this.UpdateRageState( npc, targetPlr );
-
-			if( npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
-				this.UpdateEnragedEffects( npc, targetPlr );
+		/*public override void PostAI( NPC npc ) {
+			if( npc.boss && npc.HasPlayerTarget ) {
+				DebugHelpers.Print( "boss ai "+npc.FullName+" ("+npc.whoAmI+")", string.Join(", ", npc.ai) );
 			}
-
-			if( this.RecentRagePercentChange > 0f ) {
-				this.RecentRagePercentChange -= 1f / 7200f;
-				if( this.RecentRagePercentChange < 0f ) {
-					this.RecentRagePercentChange = 0f;
-				} else if( this.RecentRagePercentChange > (1f / 60f) ) {
-					this.RecentRagePercentChange = 1f / 60f;
-				}
-			}
-		}
+		}*/
 
 
 		////
@@ -93,6 +81,23 @@ namespace Enraged {
 					shop.item[ nextSlot++ ] = item;
 				}
 				break;
+			}
+		}
+
+
+		////////////////
+
+		private void UpdateRageIf( NPC npc, Player targetPlr ) {
+			if( !this.CanRageChange( npc, targetPlr ) ) {
+				return;
+			}
+
+			this.UpdateRageState( npc, targetPlr );
+
+			//
+
+			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
+				this.UpdateRageEffects( npc, targetPlr );
 			}
 		}
 	}
