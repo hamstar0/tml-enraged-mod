@@ -9,19 +9,16 @@ using Enraged.Buffs;
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
-		 private float BaseScale = 1;
+		private float _BaseScale = 1;
 
-		public override void DrawEffects( NPC npc, ref Color drawColor ) {
-			if( npc.boss ) {
-				if( npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
-					this.ApplyVisualFx( npc, ref drawColor );
-				} else {
-					this.BaseScale = npc.scale;
-				}
-			}
+
+
+		////////////////
+
+		private void RevertVisualFx( NPC npc ) {
+			this._BaseScale = npc.scale;
 		}
 
-		////
 
 		private void ApplyVisualFx( NPC npc, ref Color drawColor ) {
 			int npcWho = npc.whoAmI;
@@ -45,7 +42,7 @@ namespace Enraged {
 			drawColor = XNAColorHelpers.Mul( drawColor, newColor );
 
 			// Add NPC vibration
-			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + this.BaseScale;
+			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + this._BaseScale;
 
 			//magnitude *= Main.LocalPlayer.Center.Y == 0f
 			//	? magnitude

@@ -9,23 +9,6 @@ using Enraged.Buffs;
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
-		private void UpdateRageIf( NPC npc, Player targetPlr ) {
-			if( !this.CanEnrage( npc, targetPlr ) ) {
-				return;
-			}
-
-			this.UpdateRageAmount( npc, targetPlr );
-
-			//
-
-			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				this.UpdateEnragedExternalEffects( npc, targetPlr );
-			}
-		}
-
-
-		////////////////
-
 		public void BeginEnragedState( NPC npc ) {
 			this.RagePercent = 0f;
 			this.RecentRagePercentChange = 0f;

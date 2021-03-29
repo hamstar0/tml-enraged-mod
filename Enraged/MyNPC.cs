@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -96,6 +97,19 @@ namespace Enraged {
 		public override void ModifyHitByProjectile( NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
 				this.ModifyHitWhileEnraged( ref damage, ref knockback );
+			}
+		}
+
+
+		////////////////
+
+		public override void DrawEffects( NPC npc, ref Color drawColor ) {
+			if( npc.boss ) {
+				if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
+					this.ApplyVisualFx( npc, ref drawColor );
+				} else {
+					this.RevertVisualFx( npc );
+				}
 			}
 		}
 	}

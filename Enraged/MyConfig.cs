@@ -147,7 +147,7 @@ namespace Enraged {
 
 		////////////////
 
-		public HashSet<NPCDefinition> BossesWhitelist { get; set; } = new HashSet<NPCDefinition> {
+		public HashSet<NPCDefinition> NpcWhitelist { get; set; } = new HashSet<NPCDefinition> {
 			new NPCDefinition( NPCID.EyeofCthulhu ),
 			new NPCDefinition( NPCID.KingSlime ),
 			new NPCDefinition( NPCID.QueenBee ),
@@ -166,7 +166,7 @@ namespace Enraged {
 			//new NPCDefinition( NPCID.MoonLordCore ),
 		};
 
-		public Dictionary<NPCDefinition, ConfigFloat> RageMeterScales { get; set; } = new Dictionary<NPCDefinition, ConfigFloat>();
+		public Dictionary<NPCDefinition, ConfigFloat> RageRateScales { get; set; } = new Dictionary<NPCDefinition, ConfigFloat>();
 
 
 
@@ -178,8 +178,8 @@ namespace Enraged {
 				return clone;
 			}
 
-			this.BossesWhitelist = new HashSet<NPCDefinition>( clone.BossesWhitelist );
-			this.RageMeterScales = new Dictionary<NPCDefinition, ConfigFloat>( clone.RageMeterScales );
+			this.NpcWhitelist = new HashSet<NPCDefinition>( clone.NpcWhitelist );
+			this.RageRateScales = new Dictionary<NPCDefinition, ConfigFloat>( clone.RageRateScales );
 
 			return clone;
 		}
