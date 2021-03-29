@@ -87,17 +87,15 @@ namespace Enraged {
 
 		////////////////
 
-		private void UpdateRageIf( NPC npc, Player targetPlr ) {
-			if( !this.CanRageChange( npc, targetPlr ) ) {
-				return;
+		public override void ModifyHitByItem( NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit ) {
+			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
+				this.ModifyHitWhileEnraged( ref damage, ref knockback );
 			}
+		}
 
-			this.UpdateRageState( npc, targetPlr );
-
-			//
-
-			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				this.UpdateRageEffects( npc, targetPlr );
+		public override void ModifyHitByProjectile( NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection ) {
+			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
+				this.ModifyHitWhileEnraged( ref damage, ref knockback );
 			}
 		}
 	}

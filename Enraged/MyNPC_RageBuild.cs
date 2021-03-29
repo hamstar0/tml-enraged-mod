@@ -13,7 +13,7 @@ using Enraged.Buffs;
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
-		private bool CanRageChange( NPC npc, Player targetPlr ) {
+		private bool CanEnrage( NPC npc, Player targetPlr ) {
 			var config = EnragedConfig.Instance;
 			var wlBosses = config.Get<HashSet<NPCDefinition>>( nameof(config.BossesWhitelist) );
 			var def = new NPCDefinition( npc.type );
@@ -24,7 +24,7 @@ namespace Enraged {
 
 		////
 
-		private void UpdateRageState( NPC npc, Player targetPlr ) {
+		private void UpdateRageAmount( NPC npc, Player targetPlr ) {
 			var config = EnragedConfig.Instance;
 			float oldRageValue = this.RagePercent;
 
@@ -129,7 +129,7 @@ namespace Enraged {
 				this.RagePercent = 0;
 			} else if( this.RagePercent >= 1f ) {
 				this.RagePercent = 1f;
-				this.Enrage( npc );
+				this.BeginEnragedState( npc );
 			}
 
 			if( config.DebugModeInfo ) {

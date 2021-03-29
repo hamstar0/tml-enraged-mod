@@ -9,7 +9,24 @@ using Enraged.Buffs;
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
-		public void Enrage( NPC npc ) {
+		private void UpdateRageIf( NPC npc, Player targetPlr ) {
+			if( !this.CanEnrage( npc, targetPlr ) ) {
+				return;
+			}
+
+			this.UpdateRageAmount( npc, targetPlr );
+
+			//
+
+			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
+				this.UpdateEnragedExternalEffects( npc, targetPlr );
+			}
+		}
+
+
+		////////////////
+
+		public void BeginEnragedState( NPC npc ) {
 			this.RagePercent = 0f;
 			this.RecentRagePercentChange = 0f;
 
@@ -23,7 +40,7 @@ namespace Enraged {
 
 		////////////////
 		
-		private void UpdateRageEffects( NPC npc, Player targetPlr ) {
+		private void UpdateEnragedExternalEffects( NPC npc, Player targetPlr ) {
 			if( Main.netMode == NetmodeID.MultiplayerClient ) {
 				return;
 			}
@@ -46,18 +63,9 @@ namespace Enraged {
 
 		////////////////
 
-		public override void ModifyHitByItem( NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit ) {
-			if( npc.boss && npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
-				damage = Math.Max( (damage / 2) - 10, 1 );
-				knockback = 0;
-			}
-		}
-
-		public override void ModifyHitByProjectile( NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection ) {
-			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				damage = Math.Max( (damage / 2) - 10, 1 );
-				knockback = 0;
-			}
+		private void ModifyHitWhileEnraged( ref int damage, ref float knockback ) {
+			damage = Math.Max( (damage / 2) - 10, 1 );
+			knockback = 0;
 		}
 	}
 }
