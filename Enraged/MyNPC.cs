@@ -14,7 +14,9 @@ namespace Enraged {
 
 		private int TargetDamageBuffer = 0;
 
-		private float RecentRagePercentChange = 0;
+		private float RecentRagePercentChangeChaser = 0;
+
+		private float LastKnownDrawScale = 1f;
 
 
 		////////////////
@@ -26,6 +28,7 @@ namespace Enraged {
 		public bool IsTargetUnharmedByMe =>
 			this.TargetUnharmedByMe >=
 				EnragedConfig.Instance.Get<int>( nameof(EnragedConfig.TargetUnharmedTickThreshold) );
+
 
 
 		////////////////
@@ -90,13 +93,13 @@ namespace Enraged {
 
 		public override void ModifyHitByItem( NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				this.ModifyHitWhileEnraged( ref damage, ref knockback );
+				EnragedBuff.ModifyHit( ref damage, ref knockback );
 			}
 		}
 
 		public override void ModifyHitByProjectile( NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				this.ModifyHitWhileEnraged( ref damage, ref knockback );
+				EnragedBuff.ModifyHit( ref damage, ref knockback );
 			}
 		}
 
@@ -117,9 +120,9 @@ namespace Enraged {
 		public override void DrawEffects( NPC npc, ref Color drawColor ) {
 			if( npc.boss ) {
 				if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-					this.ApplyVisualFx( npc, ref drawColor );
+					EnragedBuff.ApplyVisualFx( npc, ref drawColor, this.LastKnownDrawScale );
 				} else {
-					this.RevertVisualFx( npc );
+					this.LastKnownDrawScale = npc.scale;
 				}
 			}
 		}

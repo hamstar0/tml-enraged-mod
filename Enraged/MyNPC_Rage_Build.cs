@@ -15,13 +15,12 @@ namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
 		private void UpdateRageAmount( NPC npc, Player targetPlr ) {
 			var config = EnragedConfig.Instance;
-			float oldRageValue = this.RagePercent;
 
 			this.TargetUnharmedByMe++;
 
 			if( this.IsTargetUnharmedByMe ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromUnharmedTarget );
-				this.AddRageIf( "unharmed", npc, config.Get<float>( entryName ) );
+				this.RecentRagePercentChangeChaser += this.AddRageIf( "unharmed", npc, config.Get<float>( entryName ) );
 			}
 
 			int distSqr = (int)Vector2.DistanceSquared( npc.Center, targetPlr.Center );
@@ -32,31 +31,23 @@ namespace Enraged {
 
 			if( distSqr > minSafeDistSqr ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooFar );
-				this.AddRageIf( "too far", npc, config.Get<float>( entryName ) );
+				this.RecentRagePercentChangeChaser += this.AddRageIf( "too far", npc, config.Get<float>( entryName ) );
 			}
 			if( distSqr < maxSafeDistSqr ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooClose );
-				this.AddRageIf( "too near", npc, config.Get<float>( entryName ) );
+				this.RecentRagePercentChangeChaser += this.AddRageIf( "too near", npc, config.Get<float>( entryName ) );
 			}
 
 			//
 
-			if( this.RecentRagePercentChange > 0f ) {
-				this.RecentRagePercentChange -= 1f / 7200f;
-				if( this.RecentRagePercentChange < 0f ) {
-					this.RecentRagePercentChange = 0f;
-				} else if( this.RecentRagePercentChange > ( 1f / 60f ) ) {
-					this.RecentRagePercentChange = 1f / 60f;
+			if( this.RecentRagePercentChangeChaser > 0f ) {
+				this.RecentRagePercentChangeChaser -= 1f / 7200f;
+
+				if( this.RecentRagePercentChangeChaser < 0f ) {
+					this.RecentRagePercentChangeChaser = 0f;
+				} else if( this.RecentRagePercentChangeChaser > (1f / 60f) ) {
+					this.RecentRagePercentChangeChaser = 1f / 60f;
 				}
-			}
-
-			//
-
-			var mymod = EnragedMod.Instance;
-			string uid = NPCID.GetUniqueKey( npc.type );
-
-			if( mymod.RageOverrides.ContainsKey( uid ) ) {
-				this.RagePercent = mymod.RageOverrides[uid].Invoke( npc.whoAmI, oldRageValue, this.RagePercent );
 			}
 		}
 
@@ -78,7 +69,7 @@ namespace Enraged {
 			float ragePerc = config.Get<float>( nameof( EnragedConfig.RagePercentGainPerHitTaken ) );
 
 			Timers.SetTimer( timerName, cooldownTicks, false, () => false );
-			this.AddRageIf( "on hit", npc, ragePerc );
+			this.RecentRagePercentChangeChaser += this.AddRageIf( "on hit", npc, ragePerc );
 		}
 
 
@@ -100,30 +91,42 @@ namespace Enraged {
 				float ragePerc = config.Get<float>( nameof(EnragedConfig.RagePercentGainPerHitTaken) );
 
 				this.TargetDamageBuffer -= 10;
-				this.AddRageIf( "target hit", npc, ragePerc );
+				this.RecentRagePercentChangeChaser += this.AddRageIf( "target hit", npc, ragePerc );
 			}
 		}
 
 
 		////////////////
 
-		public void AddRageIf( string context, NPC npc, float addedPercent ) {
+		public float AddRageIf( string context, NPC npc, float addedPercent ) {
 			var config = EnragedConfig.Instance;
+
+			float oldRageValue = this.RagePercent;
 			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof(EnragedConfig.RageRateScales) );
 			float scale = rageScale.GetOrDefault( new NPCDefinition(npc.type) )?.Value
 				?? 1f;
 
 			if( scale == 0f || addedPercent == 0f ) {
-				return;
+				return 0f;
 			}
 			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				return;
+				return 0f;
 			}
 
 			addedPercent *= scale;
 
+			//
+
+			var mymod = EnragedMod.Instance;
+			string uid = NPCID.GetUniqueKey( npc.type );
+
+			if( mymod.RageOverrides.ContainsKey( uid ) ) {
+				addedPercent = mymod.RageOverrides[uid].Invoke( npc.whoAmI, oldRageValue, addedPercent );
+			}
+
+			//
+
 			this.RagePercent += addedPercent;
-			this.RecentRagePercentChange += addedPercent;
 
 			if( this.RagePercent < 0 ) {
 				this.RagePercent = 0;
@@ -132,12 +135,16 @@ namespace Enraged {
 				this.BeginEnragedState( npc );
 			}
 
+			//
+
 			if( config.DebugModeInfo ) {
 				DebugHelpers.Print(
 					context+npc.whoAmI,
 					"Boss "+npc.FullName+" enraged from "+context+" by "+addedPercent+"; is now "+this.RagePercent
 				);
 			}
+
+			return addedPercent;
 		}
 	}
 }

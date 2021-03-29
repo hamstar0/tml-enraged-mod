@@ -6,20 +6,9 @@ using HamstarHelpers.Classes.CameraAnimation;
 using HamstarHelpers.Helpers.XNA;
 
 
-namespace Enraged {
-	partial class EnragedGlobalNPC : GlobalNPC {
-		private float _BaseScale = 1;
-
-
-
-		////////////////
-
-		private void RevertVisualFx( NPC npc ) {
-			this._BaseScale = npc.scale;
-		}
-
-
-		private void ApplyVisualFx( NPC npc, ref Color drawColor ) {
+namespace Enraged.Buffs {
+	partial class EnragedBuff : ModBuff {
+		internal static void ApplyVisualFx( NPC npc, ref Color drawColor, float lastKnownDrawScale ) {
 			int npcWho = npc.whoAmI;
 
 			float getMagnitude() {
@@ -41,7 +30,7 @@ namespace Enraged {
 			drawColor = XNAColorHelpers.Mul( drawColor, newColor );
 
 			// Add NPC vibration
-			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + this._BaseScale;
+			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + lastKnownDrawScale;
 
 			//magnitude *= Main.LocalPlayer.Center.Y == 0f
 			//	? magnitude

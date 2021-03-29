@@ -32,7 +32,7 @@ namespace Enraged {
 			
 //DebugHelpers.Print( "rages", "built%: "+this.RageBuildupPercent.ToString("N2")
 //	+", change%: "+(this.RecentRagePercentChange * 60f).ToString("N3") );
-			this.DrawRageGauge( scale, position, this.RagePercent, this.RecentRagePercentChange );
+			this.DrawRageGauge( scale, position, this.RagePercent, this.RecentRagePercentChangeChaser );
 
 			return true;
 		}

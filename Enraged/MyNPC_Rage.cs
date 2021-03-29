@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using HamstarHelpers.Helpers.Debug;
@@ -19,7 +20,7 @@ namespace Enraged {
 
 
 		////////////////
-
+		
 		private void UpdateRageIf( NPC npc, Player targetPlr ) {
 			if( !EnragedGlobalNPC.CanEnrage(npc) ) {
 				return;
@@ -30,8 +31,22 @@ namespace Enraged {
 			//
 
 			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				this.UpdateEnragedExternalEffects( npc, targetPlr );
+				EnragedBuff.ApplyExternalEffects( npc );
 			}
+		}
+
+
+		////////////////
+
+		public void BeginEnragedState( NPC npc ) {
+			this.RagePercent = 0f;
+			this.RecentRagePercentChangeChaser = 0f;
+
+			int ticks = EnragedConfig.Instance.Get<int>( nameof( EnragedConfig.RageDurationTicks ) );
+
+			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), ticks );
+
+			Main.PlaySound( SoundID.NPCHit57, npc.Center );
 		}
 	}
 }
