@@ -5,48 +5,59 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.DotNET.Extensions;
 using Enraged.Buffs;
 
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
-		public static bool CanEnrage( NPC npc ) {
+		public float AddRageIf( string context, NPC npc, float addedPercent ) {
 			var config = EnragedConfig.Instance;
-			var wl = config.Get<HashSet<NPCDefinition>>( nameof(config.NpcWhitelist) );
-			var def = new NPCDefinition( npc.type );
 
-			return wl.Contains( def );
-		}
+			float oldRageValue = this.RagePercent;
+			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof( EnragedConfig.RageRateScales ) );
+			float scale = rageScale.GetOrDefault( new NPCDefinition( npc.type ) )?.Value
+				?? 1f;
 
-
-		////////////////
-		
-		private void UpdateRageIf( NPC npc, Player targetPlr ) {
-			if( !EnragedGlobalNPC.CanEnrage(npc) ) {
-				return;
+			if( scale == 0f || addedPercent == 0f ) {
+				return 0f;
+			}
+			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
+				return 0f;
 			}
 
-			this.UpdateRageAmount( npc, targetPlr );
+			addedPercent *= scale;
 
 			//
 
-			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ApplyExternalEffects( npc );
+			var mymod = EnragedMod.Instance;
+			string uid = NPCID.GetUniqueKey( npc.type );
+
+			if( mymod.RageOverrides.ContainsKey( uid ) ) {
+				addedPercent = mymod.RageOverrides[uid].Invoke( npc.whoAmI, oldRageValue, addedPercent );
 			}
-		}
 
+			//
 
-		////////////////
+			this.RagePercent += addedPercent;
 
-		public void BeginEnragedState( NPC npc ) {
-			this.RagePercent = 0f;
-			this.RecentRagePercentChangeChaser = 0f;
+			if( this.RagePercent < 0 ) {
+				this.RagePercent = 0;
+			} else if( this.RagePercent >= 1f ) {
+				this.RagePercent = 1f;
+				this.BeginEnragedState( npc );
+			}
 
-			int ticks = EnragedConfig.Instance.Get<int>( nameof( EnragedConfig.RageDurationTicks ) );
+			//
 
-			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), ticks );
+			if( config.DebugModeInfo ) {
+				DebugHelpers.Print(
+					context + npc.whoAmI,
+					"Boss " + npc.FullName + " enraged from " + context + " by " + addedPercent + "; is now " + this.RagePercent
+				);
+			}
 
-			Main.PlaySound( SoundID.NPCHit57, npc.Center );
+			return addedPercent;
 		}
 	}
 }

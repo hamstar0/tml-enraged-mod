@@ -44,16 +44,20 @@ namespace Enraged {
 		// private bool _IsUpdating = false;
 
 		public override bool PreAI( NPC npc ) {
-			if( npc.boss /*&& !this._IsUpdating*/ ) {
-				if( npc.HasPlayerTarget ) {
-					Player player = Main.player[npc.target];
-					if( player?.active == true ) {
-						//this._IsUpdating = true;
-						this.UpdateRageIf( npc, player );
-						//this._IsUpdating = false;
-					}
+			/*!this._IsUpdating*/
+			if( npc.HasPlayerTarget ) {
+				Player player = Main.player[npc.target];
+				if( player?.active == true ) {
+					//this._IsUpdating = true;
+					this.UpdateRageGeneralSourcesIf( npc, player );
+					//this._IsUpdating = false;
 				}
 			}
+
+			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
+				EnragedBuff.ApplyExternalEffects( npc );
+			}
+
 			return base.PreAI( npc );
 		}
 		/*public override void PostAI( NPC npc ) {
