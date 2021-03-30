@@ -8,10 +8,24 @@ using CursedBrambles.Tiles;
 
 namespace Enraged.Buffs {
 	partial class EnragedBuff : ModBuff {
-		public static void ApplyExternalEffects( NPC npc ) {
+		public static void ApplyExternalEffectsIf( NPC npc ) {
 			if( Main.netMode == NetmodeID.MultiplayerClient ) {
 				return;
 			}
+
+			//
+
+			var mymod = EnragedMod.Instance;
+			string uid = NPCID.GetUniqueKey( npc.type );
+
+			if( mymod.EnragedNpcHooks.ContainsKey(uid) ) {
+				(bool isBramble, bool _)? behavior = mymod.EnragedNpcHooks[uid].Invoke( npc.whoAmI );
+				if( behavior.HasValue && !behavior.Value.isBramble ) {
+					return;
+				}
+			}
+
+			//
 
 			var config = EnragedConfig.Instance;
 			int thickness = config.Get<int>( nameof( EnragedConfig.EnragedBrambleTrailThickness ) );
@@ -28,7 +42,22 @@ namespace Enraged.Buffs {
 			}
 		}
 
-		public static void ModifyHit( ref int damage, ref float knockback ) {
+
+		////
+
+		public static void ModifyHitIf( NPC npc, ref int damage, ref float knockback ) {
+			var mymod = EnragedMod.Instance;
+			string uid = NPCID.GetUniqueKey( npc.type );
+
+			if( mymod.EnragedNpcHooks.ContainsKey( uid ) ) {
+				(bool _, bool isDamageResist)? behavior = mymod.EnragedNpcHooks[uid].Invoke( npc.whoAmI );
+				if( behavior.HasValue && !behavior.Value.isDamageResist ) {
+					return;
+				}
+			}
+
+			//
+
 			damage = Math.Max( (damage / 2) - 10, 1 );
 			knockback = 0;
 		}

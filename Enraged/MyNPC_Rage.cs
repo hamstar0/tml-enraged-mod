@@ -14,7 +14,6 @@ namespace Enraged {
 		public float AddRageIf( string context, NPC npc, float addedPercent ) {
 			var config = EnragedConfig.Instance;
 
-			float oldRageValue = this.RagePercent;
 			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof( EnragedConfig.RageRateScales ) );
 			float scale = rageScale.GetOrDefault( new NPCDefinition( npc.type ) )?.Value
 				?? 1f;
@@ -27,15 +26,6 @@ namespace Enraged {
 			}
 
 			addedPercent *= scale;
-
-			//
-
-			var mymod = EnragedMod.Instance;
-			string uid = NPCID.GetUniqueKey( npc.type );
-
-			if( mymod.RageOverrides.ContainsKey( uid ) ) {
-				addedPercent = mymod.RageOverrides[uid].Invoke( npc.whoAmI, oldRageValue, addedPercent );
-			}
 
 			//
 

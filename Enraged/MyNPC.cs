@@ -55,7 +55,7 @@ namespace Enraged {
 			}
 
 			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ApplyExternalEffects( npc );
+				EnragedBuff.ApplyExternalEffectsIf( npc );
 			}
 
 			return base.PreAI( npc );
@@ -97,13 +97,13 @@ namespace Enraged {
 
 		public override void ModifyHitByItem( NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ModifyHit( ref damage, ref knockback );
+				EnragedBuff.ModifyHitIf( npc, ref damage, ref knockback );
 			}
 		}
 
 		public override void ModifyHitByProjectile( NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ModifyHit( ref damage, ref knockback );
+				EnragedBuff.ModifyHitIf( npc, ref damage, ref knockback );
 			}
 		}
 
