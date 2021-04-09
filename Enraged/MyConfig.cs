@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
-using Terraria.ID;
 using HamstarHelpers.Classes.UI.ModConfig;
 using HamstarHelpers.Helpers.Debug;
 
@@ -156,17 +156,22 @@ namespace Enraged {
 			new NPCDefinition( NPCID.SkeletronHead ),
 			//new NPCDefinition( NPCID.WallofFlesh ),
 			//new NPCDefinition( NPCID.TheDestroyer ),
-			//new NPCDefinition( NPCID.Retinazer ),
-			//new NPCDefinition( NPCID.Spazmatism ),
+			new NPCDefinition( NPCID.Retinazer ),
+			new NPCDefinition( NPCID.Spazmatism ),
 			new NPCDefinition( NPCID.SkeletronPrime ),
 			new NPCDefinition( NPCID.Plantera ),
-			//new NPCDefinition( NPCID.Golem ),
-			//new NPCDefinition( NPCID.DukeFishron ),
+			new NPCDefinition( NPCID.Golem ),
+			new NPCDefinition( NPCID.DukeFishron ),
 			//new NPCDefinition( NPCID.DD2Betsy ),
 			//new NPCDefinition( NPCID.MoonLordCore ),
 		};
 
-		public Dictionary<NPCDefinition, ConfigFloat> RageRateScales { get; set; } = new Dictionary<NPCDefinition, ConfigFloat>();
+		public Dictionary<NPCDefinition, ConfigFloat> RageRateScales { get; set; } = new Dictionary<NPCDefinition, ConfigFloat> {
+			{ new NPCDefinition(NPCID.SkeletronHead), new ConfigFloat( 0.5f ) },
+			{ new NPCDefinition(NPCID.Retinazer), new ConfigFloat( 0.5f ) },
+			{ new NPCDefinition(NPCID.Spazmatism), new ConfigFloat( 0.5f ) },
+			{ new NPCDefinition(NPCID.DukeFishron), new ConfigFloat( 0.35f ) }
+		};
 
 
 

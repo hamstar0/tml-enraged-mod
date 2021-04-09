@@ -14,7 +14,7 @@ namespace Enraged {
 		public float AddRageIf( string context, NPC npc, float addedPercent ) {
 			var config = EnragedConfig.Instance;
 
-			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof( EnragedConfig.RageRateScales ) );
+			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof(EnragedConfig.RageRateScales) );
 			float scale = rageScale.GetOrDefault( new NPCDefinition( npc.type ) )?.Value
 				?? 1f;
 
