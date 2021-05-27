@@ -4,8 +4,8 @@ using System.ComponentModel;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
-using HamstarHelpers.Classes.UI.ModConfig;
-using HamstarHelpers.Helpers.Debug;
+using ModLibsCore.Classes.UI.ModConfig;
+using ModLibsCore.Libraries.Debug;
 
 
 namespace Enraged {

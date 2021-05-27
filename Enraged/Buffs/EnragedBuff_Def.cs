@@ -1,7 +1,7 @@
 ﻿using System;
 using Terraria;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.Debug;
+using ModLibsCore.Libraries.Debug;
 
 
 namespace Enraged.Buffs {
@@ -20,7 +20,7 @@ namespace Enraged.Buffs {
 			var config = EnragedConfig.Instance;
 
 			if( config.DebugModeInfo ) {
-				DebugHelpers.Print( "BossEnrageDuration_"+npc.whoAmI, ""+npc.buffTime[buffIndex] );
+				DebugLibraries.Print( "BossEnrageDuration_"+npc.whoAmI, ""+npc.buffTime[buffIndex] );
 			}
 
 			/*Timers.RunNow( () => {

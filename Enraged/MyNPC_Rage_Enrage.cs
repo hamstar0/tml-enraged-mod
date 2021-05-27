@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
-using HamstarHelpers.Helpers.Debug;
+using ModLibsCore.Libraries.Debug;
 using Enraged.Buffs;
 
 

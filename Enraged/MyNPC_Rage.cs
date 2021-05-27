@@ -4,8 +4,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.DotNET.Extensions;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.DotNET.Extensions;
 using Enraged.Buffs;
 
 
@@ -41,7 +41,7 @@ namespace Enraged {
 			//
 
 			if( config.DebugModeInfo ) {
-				DebugHelpers.Print(
+				DebugLibraries.Print(
 					context + npc.whoAmI,
 					"Boss " + npc.FullName + " enraged from " + context + " by " + addedPercent + "; is now " + this.RagePercent
 				);

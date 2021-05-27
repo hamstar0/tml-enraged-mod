@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using HamstarHelpers.Classes.CameraAnimation;
-using HamstarHelpers.Helpers.XNA;
+using ModLibsGeneral.Libraries.XNA;
+using ModLibsCamera.Classes.CameraAnimation;
 
 
 namespace Enraged.Buffs {
@@ -27,7 +27,7 @@ namespace Enraged.Buffs {
 
 			// Add red tint
 			var newColor = new Color( 255, 128, 128 );
-			drawColor = XNAColorHelpers.Mul( drawColor, newColor );
+			drawColor = XnaColorLibraries.Mul( drawColor, newColor );
 
 			// Add NPC vibration
 			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + lastKnownDrawScale;

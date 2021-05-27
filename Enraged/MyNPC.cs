@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.Debug;
+using ModLibsCore.Libraries.Debug;
 using Enraged.Buffs;
 using Enraged.Items;
 
@@ -62,7 +62,7 @@ namespace Enraged {
 		}
 		/*public override void PostAI( NPC npc ) {
 			if( npc.boss && npc.HasPlayerTarget ) {
-				DebugHelpers.Print( "boss ai "+npc.FullName+" ("+npc.whoAmI+")", string.Join(", ", npc.ai) );
+				DebugLibraries.Print( "boss ai "+npc.FullName+" ("+npc.whoAmI+")", string.Join(", ", npc.ai) );
 			}
 		}*/
 

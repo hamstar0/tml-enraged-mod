@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.Debug;
+using ModLibsCore.Libraries.Debug;
 using Enraged.Buffs;
 
 
@@ -30,7 +30,7 @@ namespace Enraged {
 				return true;
 			}
 			
-//DebugHelpers.Print( "rages", "built%: "+this.RageBuildupPercent.ToString("N2")
+//DebugLibraries.Print( "rages", "built%: "+this.RageBuildupPercent.ToString("N2")
 //	+", change%: "+(this.RecentRagePercentChange * 60f).ToString("N3") );
 			this.DrawRageGauge( scale, position, this.RagePercent, this.RecentRagePercentChangeChaser );
 
@@ -54,7 +54,7 @@ namespace Enraged {
 
 			float opacity = 0.1f + (ragePercent * 0.9f);
 			opacity += (1f - opacity) * shake;
-//DebugHelpers.Print( "opac", "opac:"+opacity.ToString("N2")+", perc:"+this.RageBuildupPercent.ToString("N2")+", change%:"+(this.RecentRagePercentChange * 60f));
+//DebugLibraries.Print( "opac", "opac:"+opacity.ToString("N2")+", perc:"+this.RageBuildupPercent.ToString("N2")+", change%:"+(this.RecentRagePercentChange * 60f));
 
 			//double secPerc = (double)DateTime.Now.Millisecond / 1000d;
 			//secPerc = (DateTime.Now.Second & 1) == 1 ? 1f - secPerc : secPerc;

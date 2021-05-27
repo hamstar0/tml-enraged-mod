@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Services.Timers;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Services.Timers;
 
 
 namespace Enraged {
