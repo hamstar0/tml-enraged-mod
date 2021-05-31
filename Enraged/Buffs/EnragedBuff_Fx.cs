@@ -27,7 +27,7 @@ namespace Enraged.Buffs {
 
 			// Add red tint
 			var newColor = new Color( 255, 128, 128 );
-			drawColor = XnaColorLibraries.Mul( drawColor, newColor );
+			drawColor = XNAColorLibraries.Mul( drawColor, newColor );
 
 			// Add NPC vibration
 			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + lastKnownDrawScale;
