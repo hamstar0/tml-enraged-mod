@@ -18,6 +18,10 @@ namespace Enraged {
 
 		private float LastKnownDrawScale = 1f;
 
+		////
+
+		private float HurtAnimationPercent = 0f;
+
 
 		////////////////
 
@@ -56,6 +60,13 @@ namespace Enraged {
 
 			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
 				EnragedBuff.ApplyExternalEffectsIf( npc );
+			}
+
+			if( this.HurtAnimationPercent > 0f ) {
+				this.HurtAnimationPercent -= 1f / 10f;
+				if( this.HurtAnimationPercent < 0f ) {
+					this.HurtAnimationPercent = 0f;
+				}
 			}
 
 			return base.PreAI( npc );
@@ -97,13 +108,13 @@ namespace Enraged {
 
 		public override void ModifyHitByItem( NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ModifyHitIf( npc, ref damage, ref knockback );
+				EnragedBuff.ModifyHitStatsIf( npc, ref damage, ref knockback );
 			}
 		}
 
 		public override void ModifyHitByProjectile( NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ModifyHitIf( npc, ref damage, ref knockback );
+				EnragedBuff.ModifyHitStatsIf( npc, ref damage, ref knockback );
 			}
 		}
 
@@ -111,7 +122,11 @@ namespace Enraged {
 		////////////////
 
 		public override void HitEffect( NPC npc, int hitDirection, double damage ) {
-			this.AdjustRageOnHitIf( npc );
+			if( this.AdjustRageOnHitIf(npc) ) {
+				this.HurtAnimationPercent = damage > 3d
+					? 1f
+					: this.HurtAnimationPercent;
+			}
 		}
 
 		public override void OnHitPlayer( NPC npc, Player target, int damage, bool crit ) {
@@ -124,7 +139,7 @@ namespace Enraged {
 		public override void DrawEffects( NPC npc, ref Color drawColor ) {
 			if( npc.boss ) {
 				if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-					EnragedBuff.ApplyVisualFx( npc, ref drawColor, this.LastKnownDrawScale );
+					EnragedBuff.ApplyVisualFx( npc, ref drawColor, this.LastKnownDrawScale, this.HurtAnimationPercent );
 				} else {
 					this.LastKnownDrawScale = npc.scale;
 				}

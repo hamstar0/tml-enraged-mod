@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using ModLibsCore.Libraries.Debug;
+using CursedBrambles;
 using CursedBrambles.Tiles;
 
 
@@ -37,6 +38,7 @@ namespace Enraged.Buffs {
 					tileY: (int)npc.Center.Y / 16,
 					radius: thickness,
 					densityPercent: density,
+					validateAt: CursedBramblesAPI.CreatePlayerAvoidingBrambleValidator( 10 ),
 					sync: true
 				);
 			}
@@ -45,7 +47,7 @@ namespace Enraged.Buffs {
 
 		////
 
-		public static void ModifyHitIf( NPC npc, ref int damage, ref float knockback ) {
+		public static void ModifyHitStatsIf( NPC npc, ref int damage, ref float knockback ) {
 			var mymod = EnragedMod.Instance;
 			string uid = NPCID.GetUniqueKey( npc.type );
 
@@ -58,6 +60,11 @@ namespace Enraged.Buffs {
 
 			//
 
+			//var config = EnragedConfig.Instance;
+			//float damageScale = config.Get<float>( nameof(config.EnragedDamageReceivedScale) );
+
+			//if( damageScale != 1f ) {
+			//damage *= damageScale;
 			damage = Math.Max( (damage / 2) - 10, 1 );
 			knockback = 0;
 		}

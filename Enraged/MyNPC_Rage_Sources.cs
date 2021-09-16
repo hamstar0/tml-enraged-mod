@@ -53,14 +53,14 @@ namespace Enraged {
 
 		////////////////
 
-		private void AdjustRageOnHitIf( NPC npc ) {
+		private bool AdjustRageOnHitIf( NPC npc ) {
 			if( !EnragedGlobalNPC.CanEnrage(npc) ) {
-				return;
+				return false;
 			}
 
 			string timerName = "EnragedNpcHitCooldown_" + npc.whoAmI;
 			if( Timers.GetTimerTickDuration(timerName) > 0 ) {
-				return;
+				return false;
 			}
 
 			var config = EnragedConfig.Instance;
@@ -69,6 +69,8 @@ namespace Enraged {
 
 			Timers.SetTimer( timerName, cooldownTicks, false, () => false );
 			this.RecentRagePercentChangeChaser += this.AddRageIf( "on hit", npc, ragePerc );
+
+			return true;
 		}
 
 

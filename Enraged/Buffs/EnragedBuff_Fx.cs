@@ -8,7 +8,11 @@ using ModLibsCamera.Classes.CameraAnimation;
 
 namespace Enraged.Buffs {
 	partial class EnragedBuff : ModBuff {
-		internal static void ApplyVisualFx( NPC npc, ref Color drawColor, float lastKnownDrawScale ) {
+		internal static void ApplyVisualFx(
+					NPC npc,
+					ref Color drawColor,
+					float lastKnownDrawScale,
+					float hurtFxPercent ) {
 			int npcWho = npc.whoAmI;
 
 			float getMagnitude() {
@@ -28,6 +32,9 @@ namespace Enraged.Buffs {
 			// Add red tint
 			var newColor = new Color( 255, 128, 128 );
 			drawColor = XNAColorLibraries.Mul( drawColor, newColor );
+
+			// Add 'hurt fx' tint
+			drawColor = Color.Lerp( drawColor, Color.Red, hurtFxPercent );	//Color.Tomato
 
 			// Add NPC vibration
 			npc.scale = ((Main.rand.NextFloat() * 0.2f) - 0.1f) + lastKnownDrawScale;

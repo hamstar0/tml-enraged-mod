@@ -5,7 +5,10 @@ using Terraria.ID;
 namespace Enraged {
 	public static class EnragedAPI {
 		public static EnrangedBehaviorHook GetEnragedNpcBehaviorHook( int npcType ) {
-			EnragedMod.Instance.EnragedNpcHooks.TryGetValue( NPCID.GetUniqueKey(npcType), out EnrangedBehaviorHook callback );
+			EnragedMod.Instance.EnragedNpcHooks.TryGetValue(
+				NPCID.GetUniqueKey(npcType),
+				out EnrangedBehaviorHook callback
+			);
 			return callback;
 		}
 
