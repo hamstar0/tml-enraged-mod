@@ -110,12 +110,12 @@ namespace Enraged {
 
 		[Range( 1, 64 )]
 		[DefaultValue( 5 )]
-		public int EnragedBrambleTrailThickness { get; set; } = 5;
+		public int EnragedBrambleTrailWidth { get; set; } = 5;
 
 		[Range( 0f, 1f )]
-		[DefaultValue( 0.006f )]
+		[DefaultValue( 0.003f )]	// was 0.006
 		[CustomModConfigItem( typeof(MyFloatInputElement) )]
-		public float EnragedBrambleTrailDensity { get; set; } = 0.006f;
+		public float EnragedBrambleTrailDensity { get; set; } = 0.003f;
 
 
 		////////////////

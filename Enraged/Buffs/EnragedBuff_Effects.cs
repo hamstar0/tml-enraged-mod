@@ -29,7 +29,7 @@ namespace Enraged.Buffs {
 			//
 
 			var config = EnragedConfig.Instance;
-			int thickness = config.Get<int>( nameof( EnragedConfig.EnragedBrambleTrailThickness ) );
+			int thickness = config.Get<int>( nameof( EnragedConfig.EnragedBrambleTrailWidth ) );
 			float density = config.Get<float>( nameof( EnragedConfig.EnragedBrambleTrailDensity ) );
 
 			if( thickness > 0 && density > 0f ) {
