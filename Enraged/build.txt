@@ -1,6 +1,6 @@
 displayName = Enraged!
 author = hamstar
-version = 0.13.0
+version = 0.13.1
 modReferences = ModLibsCore@1.2.0, ModLibsGeneral@1.2.0, ModLibsCamera@1.0.0, CursedBrambles@1.0.0
 buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
 homepage = https://forums.terraria.org/index.php?threads/enraged.88775/

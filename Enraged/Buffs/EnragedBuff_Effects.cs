@@ -20,10 +20,19 @@ namespace Enraged.Buffs {
 			string uid = NPCID.GetUniqueKey( npc.type );
 
 			if( mymod.EnragedNpcHooks.ContainsKey(uid) ) {
-				(bool isBramble, bool _)? behavior = mymod.EnragedNpcHooks[uid].Invoke( npc.whoAmI );
+				(bool isBramble, bool _)? behavior = mymod.EnragedNpcHooks[uid]
+					.Invoke( npc.whoAmI );
+
 				if( behavior.HasValue && !behavior.Value.isBramble ) {
 					return;
 				}
+			}
+
+			//
+
+			var mynpc = npc.GetGlobalNPC<EnragedGlobalNPC>();
+			if( mynpc.BrambleBlockTimer >= 1 ) {
+				return;
 			}
 
 			//

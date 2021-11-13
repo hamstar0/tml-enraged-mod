@@ -22,6 +22,10 @@ namespace Enraged {
 
 		private float HurtAnimationPercent = 0f;
 
+		////
+
+		internal int BrambleBlockTimer = 0;
+
 
 		////////////////
 
@@ -67,6 +71,14 @@ namespace Enraged {
 				if( this.HurtAnimationPercent < 0f ) {
 					this.HurtAnimationPercent = 0f;
 				}
+			}
+
+			if( npc.velocity.LengthSquared() >= 25f ) {	// 5mph
+				this.BrambleBlockTimer = 60 * 2;
+			}
+
+			if( this.BrambleBlockTimer >= 1 ) {
+				this.BrambleBlockTimer--;
 			}
 
 			return base.PreAI( npc );
