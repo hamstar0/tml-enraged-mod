@@ -15,7 +15,7 @@ namespace Enraged {
 
 
 	public class ConfigFloat {
-		[CustomModConfigItem( typeof( FloatInputElement ) )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		[Range( 0f, 100f )]
 		[DefaultValue( 1f )]
 		public float Value { get; set; } = 1f;
