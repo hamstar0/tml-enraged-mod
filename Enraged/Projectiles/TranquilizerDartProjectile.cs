@@ -40,7 +40,7 @@ namespace Enraged.Projectiles {
 
 			if( EnragedGlobalNPC.CanEnrage(target) ) {
 				var mynpc = target.GetGlobalNPC<EnragedGlobalNPC>();
-				mynpc.AddRageIf( "tranq", target, config.Get<float>( nameof(config.TranqRagePercentAdd) ) );
+				mynpc.AddRage_If( "tranq", target, config.Get<float>( nameof(config.TranqRagePercentAdd) ) );
 			} else if( !target.boss ) {
 				target.AddBuff( BuffID.Weak, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );
 				target.AddBuff( BuffID.Slow, config.Get<int>( nameof(config.TranqDebuffTickDuration) ) );

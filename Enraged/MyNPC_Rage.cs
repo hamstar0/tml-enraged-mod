@@ -11,12 +11,14 @@ using Enraged.Buffs;
 
 namespace Enraged {
 	partial class EnragedGlobalNPC : GlobalNPC {
-		public float AddRageIf( string context, NPC npc, float addedPercent ) {
+		public float AddRage_If( string context, NPC npc, float addedPercent ) {
 			var config = EnragedConfig.Instance;
 
-			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof(EnragedConfig.RageRateScales) );
+			var rageScale = config.Get<Dictionary<NPCDefinition, ConfigFloat>>( nameof(config.RageRateScales) );
 			float scale = rageScale.GetOrDefault( new NPCDefinition( npc.type ) )?.Value
 				?? 1f;
+
+			//
 
 			if( scale == 0f || addedPercent == 0f ) {
 				return 0f;
@@ -25,9 +27,9 @@ namespace Enraged {
 				return 0f;
 			}
 
-			addedPercent *= scale;
-
 			//
+
+			addedPercent *= scale;
 
 			this.RagePercent += addedPercent;
 

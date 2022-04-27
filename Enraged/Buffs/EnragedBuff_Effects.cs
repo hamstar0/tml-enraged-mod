@@ -9,7 +9,7 @@ using CursedBrambles.Tiles;
 
 namespace Enraged.Buffs {
 	partial class EnragedBuff : ModBuff {
-		public static void ApplyExternalEffectsIf( NPC npc ) {
+		public static void ApplyExternalEffects_If_Host( NPC npc ) {
 			if( Main.netMode == NetmodeID.MultiplayerClient ) {
 				return;
 			}
@@ -20,7 +20,8 @@ namespace Enraged.Buffs {
 			string uid = NPCID.GetUniqueKey( npc.type );
 
 			if( mymod.EnragedNpcHooks.ContainsKey(uid) ) {
-				(bool isBramble, bool _)? behavior = mymod.EnragedNpcHooks[uid]
+				(bool isBramble, bool _)? behavior = mymod
+					.EnragedNpcHooks[ uid ]
 					.Invoke( npc.whoAmI );
 
 				if( behavior.HasValue && !behavior.Value.isBramble ) {
@@ -38,8 +39,8 @@ namespace Enraged.Buffs {
 			//
 
 			var config = EnragedConfig.Instance;
-			int thickness = config.Get<int>( nameof( EnragedConfig.EnragedBrambleTrailWidth ) );
-			float density = config.Get<float>( nameof( EnragedConfig.EnragedBrambleTrailDensity ) );
+			int thickness = config.Get<int>( nameof(config.EnragedBrambleTrailWidth) );
+			float density = config.Get<float>( nameof(config.EnragedBrambleTrailDensity) );
 
 			if( thickness > 0 && density > 0f ) {
 				int created = CursedBrambleTile.CreateBramblePatchAt(
@@ -56,12 +57,15 @@ namespace Enraged.Buffs {
 
 		////
 
-		public static void ModifyHitStatsIf( NPC npc, ref int damage, ref float knockback ) {
+		public static void ModifyHitStats_If( NPC npc, ref int damage, ref float knockback ) {
 			var mymod = EnragedMod.Instance;
 			string uid = NPCID.GetUniqueKey( npc.type );
 
-			if( mymod.EnragedNpcHooks.ContainsKey( uid ) ) {
-				(bool _, bool isDamageResist)? behavior = mymod.EnragedNpcHooks[uid].Invoke( npc.whoAmI );
+			if( mymod.EnragedNpcHooks.ContainsKey(uid) ) {
+				(bool _, bool isDamageResist)? behavior = mymod
+					.EnragedNpcHooks[ uid ]
+					.Invoke( npc.whoAmI );
+
 				if( behavior.HasValue && !behavior.Value.isDamageResist ) {
 					return;
 				}
@@ -69,12 +73,12 @@ namespace Enraged.Buffs {
 
 			//
 
-			//var config = EnragedConfig.Instance;
-			//float damageScale = config.Get<float>( nameof(config.EnragedDamageReceivedScale) );
+			var config = EnragedConfig.Instance;
+			float damageScale = config.Get<float>( nameof(config.EnragedDamageReceivedScale) );
 
-			//if( damageScale != 1f ) {
-			//damage *= damageScale;
-			damage = Math.Max( (damage / 2) - 10, 1 );
+			damage = Math.Max( (int)((float)damage * damageScale), 1 );
+			//damage = Math.Max( (damage / 2) - 10, 1 );
+
 			knockback = 0;
 		}
 	}

@@ -62,9 +62,13 @@ namespace Enraged {
 				}
 			}
 
-			if( npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ApplyExternalEffectsIf( npc );
+			//
+
+			if( npc.HasBuff(ModContent.BuffType<EnragedBuff>()) ) {
+				EnragedBuff.ApplyExternalEffects_If_Host( npc );
 			}
+
+			//
 
 			if( this.HurtAnimationPercent > 0f ) {
 				this.HurtAnimationPercent -= 1f / 10f;
@@ -80,6 +84,8 @@ namespace Enraged {
 			if( this.BrambleBlockTimer >= 1 ) {
 				this.BrambleBlockTimer--;
 			}
+
+			//
 
 			return base.PreAI( npc );
 		}
@@ -120,13 +126,13 @@ namespace Enraged {
 
 		public override void ModifyHitByItem( NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ModifyHitStatsIf( npc, ref damage, ref knockback );
+				EnragedBuff.ModifyHitStats_If( npc, ref damage, ref knockback );
 			}
 		}
 
 		public override void ModifyHitByProjectile( NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection ) {
 			if( npc.boss && npc.HasBuff( ModContent.BuffType<EnragedBuff>() ) ) {
-				EnragedBuff.ModifyHitStatsIf( npc, ref damage, ref knockback );
+				EnragedBuff.ModifyHitStats_If( npc, ref damage, ref knockback );
 			}
 		}
 

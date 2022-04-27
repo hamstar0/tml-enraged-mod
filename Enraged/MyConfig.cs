@@ -119,6 +119,15 @@ namespace Enraged {
 
 
 		////////////////
+		
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 0.25f )]
+		[CustomModConfigItem( typeof(MyFloatInputElement) )]
+		public float EnragedDamageReceivedScale { get; set; } = 0.25f;
+
+
+		////////////////
 
 		[DefaultValue( true )]
 		public bool TranqHasRecipe { get; set; } = true;

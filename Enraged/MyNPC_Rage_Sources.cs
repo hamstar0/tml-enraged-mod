@@ -19,7 +19,7 @@ namespace Enraged {
 
 			if( this.IsTargetUnharmedByMe ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromUnharmedTarget );
-				this.RecentRagePercentChangeChaser += this.AddRageIf( "unharmed", npc, config.Get<float>( entryName ) );
+				this.RecentRagePercentChangeChaser += this.AddRage_If( "unharmed", npc, config.Get<float>( entryName ) );
 			}
 
 			int distSqr = (int)Vector2.DistanceSquared( npc.Center, targetPlr.Center );
@@ -30,11 +30,11 @@ namespace Enraged {
 
 			if( distSqr > minSafeDistSqr ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooFar );
-				this.RecentRagePercentChangeChaser += this.AddRageIf( "too far", npc, config.Get<float>( entryName ) );
+				this.RecentRagePercentChangeChaser += this.AddRage_If( "too far", npc, config.Get<float>( entryName ) );
 			}
 			if( distSqr < maxSafeDistSqr ) {
 				string entryName = nameof( EnragedConfig.RagePercentGainPerTickFromTargetTooClose );
-				this.RecentRagePercentChangeChaser += this.AddRageIf( "too near", npc, config.Get<float>( entryName ) );
+				this.RecentRagePercentChangeChaser += this.AddRage_If( "too near", npc, config.Get<float>( entryName ) );
 			}
 
 			//
@@ -68,7 +68,7 @@ namespace Enraged {
 			float ragePerc = config.Get<float>( nameof( EnragedConfig.RagePercentGainPerHitTaken ) );
 
 			Timers.SetTimer( timerName, cooldownTicks, false, () => false );
-			this.RecentRagePercentChangeChaser += this.AddRageIf( "on hit", npc, ragePerc );
+			this.RecentRagePercentChangeChaser += this.AddRage_If( "on hit", npc, ragePerc );
 
 			return true;
 		}
@@ -92,7 +92,7 @@ namespace Enraged {
 				float ragePerc = config.Get<float>( nameof(EnragedConfig.RagePercentGainPerHitTaken) );
 
 				this.TargetDamageBuffer -= 10;
-				this.RecentRagePercentChangeChaser += this.AddRageIf( "target hit", npc, ragePerc );
+				this.RecentRagePercentChangeChaser += this.AddRage_If( "target hit", npc, ragePerc );
 			}
 		}
 	}
