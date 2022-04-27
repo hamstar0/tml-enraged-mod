@@ -38,19 +38,25 @@ namespace Enraged {
 		}
 
 
-		private void DrawRageGauge( float scale, Vector2 position, float ragePercent, float rageChangePercent ) {
+		private void DrawRageGauge( float scale, Vector2 worldPos, float ragePercent, float rageChangePercent ) {
 			Texture2D gauge = this.mod.GetTexture( "UI/PressureGauge" );
 			Texture2D dial = this.mod.GetTexture( "UI/PressureGaugeDial" );
+
+			//
 
 			float shake = Math.Min( rageChangePercent * 60f, 1f );
 			float pulse = (float)Main.mouseTextColor / 255f;
 
-			var origin = new Vector2( gauge.Width/2, gauge.Height/2 );
 			float rot = MathHelper.ToRadians( ragePercent * 180f );
-			position -= Main.screenPosition;
-			position.Y -= 12f;
-			position.X += (Main.rand.NextFloat(shake) - 0.5f) * 4f;
-			position.Y += (Main.rand.NextFloat(shake) - 0.5f) * 4f;
+
+			//
+
+			Vector2 gaugeMidPos = worldPos - Main.screenPosition;
+			gaugeMidPos.Y -= 12f;
+			gaugeMidPos.X += (Main.rand.NextFloat(shake) - 0.5f) * 4f;
+			gaugeMidPos.Y += (Main.rand.NextFloat(shake) - 0.5f) * 4f;
+
+			//
 
 			float opacity = 0.1f + (ragePercent * 0.9f);
 			opacity += (1f - opacity) * shake;
@@ -68,30 +74,32 @@ namespace Enraged {
 			gaugeColor *= opacity * pulse * 0.85f;
 			Color dialColor = Color.White * opacity * pulse * pulse;
 
+			//
+
 			Main.spriteBatch.Draw(
 				texture: gauge,
-				position: position,
+				position: gaugeMidPos,
 				sourceRectangle: null,
 				color: gaugeColor,
 				rotation: 0f,
-				origin: origin,
+				origin: new Vector2( gauge.Width, gauge.Height ) * 0.5f,
 				scale: gaugeScale,
 				effects: SpriteEffects.None,
 				layerDepth: 1f
 			);
 			Main.spriteBatch.Draw(
 				texture: dial,
-				position: position,
+				position: gaugeMidPos,
 				sourceRectangle: null,
 				color: dialColor,
 				rotation: rot,
-				origin: origin,
+				origin: new Vector2( dial.Width, dial.Height ) * 0.5f,
 				scale: gaugeScale,
 				effects: SpriteEffects.None,
 				layerDepth: 1f
 			);
 
-			if( (Main.MouseScreen - position).LengthSquared() < 2304f ) {
+			if( (Main.MouseScreen - gaugeMidPos).LengthSquared() < 2304f ) {
 				string percStr = (ragePercent * 100f).ToString("N0") + "%";
 				var percColor = Color.Lerp( Color.Lime, Color.Red, ragePercent );
 
