@@ -6,6 +6,8 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using ModLibsCore.Libraries.Debug;
 using Enraged.Buffs;
+using CursedBrambles;
+using CursedBrambles.Generators.Samples;
 
 
 namespace Enraged {
@@ -25,9 +27,31 @@ namespace Enraged {
 			this.RagePercent = 0f;
 			this.RecentRagePercentChangeChaser = 0f;
 
-			int ticks = EnragedConfig.Instance.Get<int>( nameof( EnragedConfig.RageDurationTicks ) );
+			var config = EnragedConfig.Instance;
+			int ticks = config.Get<int>( nameof(config.RageDurationTicks) );
+
+			//
+
+			var mymod = EnragedMod.Instance;
+			string uid = NPCID.GetUniqueKey( npc.netID );
+
+			if( !mymod.EnragedNpcCannotBrambleBloom.ContainsKey(uid) ) {
+				var gen = new BloomBrambleGen(
+					size: 128,
+					minTickRate: 5,
+					addedTickRateVariation: 5,
+					tileX: (int)npc.Center.X / 16,
+					tileY: (int)npc.Center.Y / 16
+				);
+
+				CursedBramblesAPI.AddBrambleGenerator( gen );
+			}
+
+			//
 
 			npc.AddBuff( ModContent.BuffType<EnragedBuff>(), ticks );
+
+			//
 
 			Main.PlaySound( SoundID.NPCHit57, npc.Center );
 		}

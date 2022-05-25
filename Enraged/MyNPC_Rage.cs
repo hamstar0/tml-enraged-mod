@@ -37,6 +37,7 @@ namespace Enraged {
 				this.RagePercent = 0;
 			} else if( this.RagePercent >= 1f ) {
 				this.RagePercent = 1f;
+
 				this.BeginEnragedState( npc );
 			}
 
@@ -45,7 +46,7 @@ namespace Enraged {
 			if( config.DebugModeInfo ) {
 				DebugLibraries.Print(
 					context + npc.whoAmI,
-					"Boss " + npc.FullName + " enraged from " + context + " by " + addedPercent + "; is now " + this.RagePercent
+					$"Boss {npc.FullName} enraged from {context} by {addedPercent}; is now {this.RagePercent}"
 				);
 			}
 

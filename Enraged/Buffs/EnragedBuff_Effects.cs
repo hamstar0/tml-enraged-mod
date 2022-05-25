@@ -14,23 +14,6 @@ namespace Enraged.Buffs {
 				return;
 			}
 
-			//
-
-			var mymod = EnragedMod.Instance;
-			string uid = NPCID.GetUniqueKey( npc.type );
-
-			if( mymod.EnragedNpcHooks.ContainsKey(uid) ) {
-				(bool isBramble, bool _)? behavior = mymod
-					.EnragedNpcHooks[ uid ]
-					.Invoke( npc.whoAmI );
-
-				if( behavior.HasValue && !behavior.Value.isBramble ) {
-					return;
-				}
-			}
-
-			//
-
 			var mynpc = npc.GetGlobalNPC<EnragedGlobalNPC>();
 			if( mynpc.BrambleBlockTimer >= 1 ) {
 				return;
@@ -38,12 +21,35 @@ namespace Enraged.Buffs {
 
 			//
 
+			var mymod = EnragedMod.Instance;
+			string uid = NPCID.GetUniqueKey( npc.type );
+
+			bool canBrambleTrail = true;
+
+			if( mymod.EnragedNpcHooks.ContainsKey(uid) ) {
+				(bool isBrambleTrail, bool _)? behavior = mymod
+					.EnragedNpcHooks[uid]
+					.Invoke( npc.whoAmI );
+
+				canBrambleTrail = !behavior.HasValue || behavior.Value.isBrambleTrail;
+			}
+
+			//
+
+			if( canBrambleTrail ) {
+				EnragedBuff.ApplyBrambleTrail( npc );
+			}
+		}
+
+		////
+
+		public static void ApplyBrambleTrail( NPC npc ) {
 			var config = EnragedConfig.Instance;
-			int thickness = config.Get<int>( nameof(config.EnragedBrambleTrailWidth) );
-			float density = config.Get<float>( nameof(config.EnragedBrambleTrailDensity) );
+			int thickness = config.Get<int>( nameof( config.EnragedBrambleTrailWidth ) );
+			float density = config.Get<float>( nameof( config.EnragedBrambleTrailDensity ) );
 
 			if( thickness > 0 && density > 0f ) {
-				int created = CursedBrambleTile.CreateBramblePatchAt(
+				int created = CursedBrambleTile.CreateBramblePatchAt_If(
 					tileX: (int)npc.Center.X / 16,
 					tileY: (int)npc.Center.Y / 16,
 					radius: thickness,
@@ -55,24 +61,32 @@ namespace Enraged.Buffs {
 		}
 
 
-		////
+		////////////////
 
 		public static void ModifyHitStats_If( NPC npc, ref int damage, ref float knockback ) {
 			var mymod = EnragedMod.Instance;
 			string uid = NPCID.GetUniqueKey( npc.type );
+
+			bool hasDamageResist = true;
 
 			if( mymod.EnragedNpcHooks.ContainsKey(uid) ) {
 				(bool _, bool isDamageResist)? behavior = mymod
 					.EnragedNpcHooks[ uid ]
 					.Invoke( npc.whoAmI );
 
-				if( behavior.HasValue && !behavior.Value.isDamageResist ) {
-					return;
-				}
+				hasDamageResist = !behavior.HasValue || behavior.Value.isDamageResist;
 			}
 
 			//
 
+			if( hasDamageResist ) {
+				EnragedBuff.ApplyDamageResist( ref damage, ref knockback );
+			}
+		}
+
+		////
+
+		private static void ApplyDamageResist( ref int damage, ref float knockback ) {
 			var config = EnragedConfig.Instance;
 			float damageScale = config.Get<float>( nameof(config.EnragedDamageReceivedScale) );
 
