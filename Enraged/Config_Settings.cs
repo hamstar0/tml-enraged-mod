@@ -64,6 +64,12 @@ namespace Enraged {
 		[DefaultValue( 60 * 10 )]
 		public int RageDurationTicks { get; set; } = 60 * 10;
 
+		////
+
+		[Range( 0, 512 )]
+		[DefaultValue( 96 )]
+		public int EnrageBrambleBloomSize { get; set; } = 96;
+
 
 		////////////////
 

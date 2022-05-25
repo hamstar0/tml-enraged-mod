@@ -32,19 +32,23 @@ namespace Enraged {
 
 			//
 
-			var mymod = EnragedMod.Instance;
-			string uid = NPCID.GetUniqueKey( npc.netID );
+			int bloomSize = config.Get<int>( nameof(config.EnrageBrambleBloomSize) );
 
-			if( !mymod.EnragedNpcCannotBrambleBloom.ContainsKey(uid) ) {
-				var gen = new BloomBrambleGen(
-					size: 128,
-					minTickRate: 5,
-					addedTickRateVariation: 5,
-					tileX: (int)npc.Center.X / 16,
-					tileY: (int)npc.Center.Y / 16
-				);
+			if( bloomSize > 0 ) {
+				var mymod = EnragedMod.Instance;
+				string uid = NPCID.GetUniqueKey( npc.netID );
 
-				CursedBramblesAPI.AddBrambleGenerator( gen );
+				if( !mymod.EnragedNpcCannotBrambleBloom.ContainsKey(uid) ) {
+					var gen = new BloomBrambleGen(
+						size: bloomSize,
+						minTickRate: 8,
+						addedTickRateVariation: 8,
+						tileX: (int)npc.Center.X / 16,
+						tileY: (int)npc.Center.Y / 16
+					);
+
+					CursedBramblesAPI.AddBrambleGenerator( gen );
+				}
 			}
 
 			//
