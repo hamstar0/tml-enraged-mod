@@ -9,43 +9,7 @@ using ModLibsCore.Libraries.Debug;
 
 
 namespace Enraged {
-	class MyFloatInputElement : FloatInputElement { }
-
-
-
-
-	public class ConfigFloat {
-		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		[Range( 0f, 100f )]
-		[DefaultValue( 1f )]
-		public float Value { get; set; } = 1f;
-
-
-		////
-
-		public ConfigFloat() { }
-
-		public ConfigFloat( float value ) {
-			this.Value = value;
-		}
-	}
-
-
-
-
 	public partial class EnragedConfig : ModConfig {
-		public static EnragedConfig Instance => ModContent.GetInstance<EnragedConfig>();
-
-
-
-		////////////////
-
-		public override ConfigScope Mode => ConfigScope.ServerSide;
-
-
-
-		////////////////
-		
 		public bool DebugModeInfo { get; set; } = false;
 
 		////
@@ -181,21 +145,5 @@ namespace Enraged {
 			{ new NPCDefinition(NPCID.Spazmatism), new ConfigFloat( 0.5f ) },
 			{ new NPCDefinition(NPCID.DukeFishron), new ConfigFloat( 0.35f ) }
 		};
-
-
-
-		////////////////
-
-		public override ModConfig Clone() {
-			var clone = base.Clone() as EnragedConfig;
-			if( clone == null ) {
-				return clone;
-			}
-
-			this.NpcWhitelist = new HashSet<NPCDefinition>( clone.NpcWhitelist );
-			this.RageRateScales = new Dictionary<NPCDefinition, ConfigFloat>( clone.RageRateScales );
-
-			return clone;
-		}
 	}
 }
